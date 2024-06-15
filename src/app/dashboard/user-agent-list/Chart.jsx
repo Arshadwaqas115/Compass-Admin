@@ -3,11 +3,11 @@ import { Loading } from "@/components/custom/loading";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { Avatar } from "@mui/material";
-import { Maindetails } from '../../../components/calender/maindetails';
-import { Accomodation } from '../../../components/calender/accomodation';
-import { Transport } from '../../../components/calender/transport';
-import { Services } from '../../../components/calender/services';
-import { OfficeInvoice } from '../../../components/calender/officeInvoice';
+import { Maindetails } from '../../../components/calendar/maindetails';
+import { Accomodation } from '../../../components/calendar/accomodation';
+import { Transport } from '../../../components/calendar/transport';
+import { Services } from '../../../components/calendar/services';
+import { OfficeInvoice } from '../../../components/calendar/officeInvoice';
 
 const Chart = ({ setPath, docId, setDocId, type }) => {
   const [loading, setLoading] = useState(false);

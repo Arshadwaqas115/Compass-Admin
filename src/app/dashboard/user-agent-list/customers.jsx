@@ -93,7 +93,7 @@ export const Customers = ({ setPath, setDocId ,setType}) => {
     <div className="p-4">
       <div className="flex items-center justify-between border-b">
         <div>
-          <h1 className="text-xl p-4">All Data</h1>
+          <h1 className="text-xl p-4">Users/Agents</h1>
         </div>
         <div className="gap-4 flex">
           <div>

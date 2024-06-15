@@ -34,7 +34,7 @@ export function MainNav(): React.JSX.Element {
           zIndex: 'var(--mui-zIndex-appBar)',
         }}
       >
-        <Stack
+        {/* <Stack
           direction="row"
           spacing={2}
           sx={{ alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', px: 2 }}
@@ -74,7 +74,7 @@ export function MainNav(): React.JSX.Element {
               sx={{ cursor: 'pointer' }}
             />
           </Stack>
-        </Stack>
+        </Stack> */}
       </Box>
       <UserPopover anchorEl={userPopover.anchorRef.current} onClose={userPopover.handleClose} open={userPopover.open} />
       <MobileNav
