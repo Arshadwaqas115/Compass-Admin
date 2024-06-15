@@ -55,7 +55,41 @@ const TransportVoucher = forwardRef(({ printData }, ref) => (
   </div>
 ));
 
-export const Transport = ({ data, customer }) => {
+export const Transport = ({ data, customer ,type }) => {
+
+  
+ 
+
+
+   const getHeaders = () =>{
+     if(type === "Agent"){
+       const AgentHeaders = [ 'File No','Guest Name','Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Booked', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print']
+       return AgentHeaders
+     }
+     else{
+      const main = [
+        'Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Booked', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print'
+      ];
+        return main
+     }
+   }
+   const headers = getHeaders()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const printRef = useRef();
   const [printData, setPrintData] = useState(null);
 
@@ -81,9 +115,6 @@ export const Transport = ({ data, customer }) => {
     }
   }, [printData, triggerPrint]);
 
-  const headers = [
-    'Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Booked', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print'
-  ];
 
   return (
     <div>

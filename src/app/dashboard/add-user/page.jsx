@@ -2,7 +2,7 @@
 import { Users } from "./users"
 const Page = () => {
   return (
-    <div>
+    <div className="mt-5">
       <Users/>
     </div>
   )

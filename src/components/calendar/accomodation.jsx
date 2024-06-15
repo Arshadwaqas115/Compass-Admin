@@ -3,22 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-const headers = [
-  'City',
-  'Ref',
-  'Hotel Name',
-  'HCN',
-  'Room Type',
-  'Meals',
-  'Quantity',
-  'Check Inn',
-  'Check Out',
-  'Nights',
-  'Vendor',
-  'Selling',
-  'Purchase',
-  'Print'
-];
+
 
 const Voucher = React.forwardRef(({ printData }, ref) => (
   <div ref={ref} className="p-8">
@@ -76,7 +61,51 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
   </div>
 ));
 
-export const Accomodation = ({ data, customer }) => {
+export const Accomodation = ({ data, customer,type }) => {
+  const customerHeaders = [
+    'City',
+    'Ref',
+    'Hotel Name',
+    'HCN',
+    'Room Type',
+    'Meals',
+    'Quantity',
+    'Check Inn',
+    'Check Out',
+    'Nights',
+    'Vendor',
+    'Selling',
+    'Purchase',
+    'Print'
+  ];
+  const agentHeaders = [
+    'File No',
+    'Guest Name',
+    'City',
+    'Ref',
+    'Hotel Name',
+    'HCN',
+    'Room Type',
+    'Meals',
+    'Quantity',
+    'Check Inn',
+    'Check Out',
+    'Nights',
+    'Vendor',
+    'Selling',
+    'Purchase',
+    'Print'
+  ]
+  const getHeaders = () => {
+    if (type === "Agent") {
+      return agentHeaders;
+    } else {
+      return customerHeaders;
+    }
+  };
+
+  const headers = getHeaders();
+  
   const printRef = useRef();
   const [printData, setPrintData] = useState(null);
 
@@ -124,11 +153,13 @@ export const Accomodation = ({ data, customer }) => {
             </tr>
           </thead>
           <tbody>
+           
             {Array.isArray(data) && data.length > 0 ? (
               data.map((row, rowIndex) => (
                 <tr key={rowIndex}>
                   {headers.slice(0, -1).map((header, index) => {
                     const field = header.toLowerCase().replace(/ /g, '');
+                    console.log(field)
                     return (
                       <td key={index} className="border px-4 py-2">
                         {row[field]}

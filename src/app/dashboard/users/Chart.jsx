@@ -26,7 +26,27 @@ const Chart = ({ setPath, docId, setDocId, type }) => {
       }
 
       const docSnap = await getDoc(docRef);
-      const temp = docSnap.data();
+      let temp = docSnap.data();
+
+      if (type === "Agent") {
+      
+        const mainDetails = temp.mainDetails || {};
+        const guestname = mainDetails.guestName || "";
+        const fileno = mainDetails.fileNo || "";
+
+        temp.accomodation = temp.accomodation.map(item => ({
+          ...item,
+          guestname,
+          fileno
+        }));
+
+        temp.transport = temp.transport.map(item => ({
+          ...item,
+          guestname,
+          fileno
+        }));
+      }
+
       setData(temp);
       setLoading(false);
     } catch (error) {
@@ -41,8 +61,8 @@ const Chart = ({ setPath, docId, setDocId, type }) => {
 
   const steps = [
     { name: 'Main details', component: <Maindetails data={data?.mainDetails} /> },
-    { name: 'Accomodation', component: <Accomodation data={data?.accomodation} customer={data?.mainDetails} /> },
-    { name: 'Transport', component: <Transport data={data?.transport} customer={data?.mainDetails} /> },
+    { name: 'Accomodation', component: <Accomodation data={data?.accomodation} customer={data?.mainDetails} type={type} /> },
+    { name: 'Transport', component: <Transport data={data?.transport} customer={data?.mainDetails} type={type} /> },
     { name: 'Services', component: <Services data={data?.services} /> },
     { name: 'Office Invoice', component: <OfficeInvoice data={data?.officeInvoice} /> },
   ];

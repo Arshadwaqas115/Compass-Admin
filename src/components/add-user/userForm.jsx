@@ -1,24 +1,28 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loading } from "../custom/loading";
 import { Maindetails } from './maindetails';
 import { Accomodation } from './accomodation';
 import { Transport } from './transport';
 import { Services } from './services';
 import { OfficeInvoice } from './officeInvoice';
-import {  addDoc, doc, setDoc, collection } from "firebase/firestore";
+import {  addDoc, doc, setDoc, collection, getDocs } from "firebase/firestore";
 import {db} from "../../firebase/firebase"
 import dayjs from 'dayjs';
-export const UserForm = () => {
+import { toast } from 'react-toastify';
+export const UserForm = ({setPath}) => {
+
+  
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
-
-  const [formData, setFormData] = useState({
+  const [agentOptions,setAgentsOptions] = useState([])
+  const initialFormData = {
     mainDetails: {
       fileNo: "",
       date: null,
       agent: "",
+      agentId: "",
       guestName: "",
       details: "",
       visaCompany: "",
@@ -31,8 +35,30 @@ export const UserForm = () => {
     transport: [],
     services: [],
     officeInvoice: [],
+  };
+
+  const [formData, setFormData] = useState({
+    mainDetails: {
+      fileNo: "",
+      date: null,
+      agent:"",
+      agentId: "",
+      guestName: "",
+      details: "",
+      visaCompany: "",
+      pa: "",
+      ra: "",
+      visaRequired: "no",
+      visaCount: "",
+     
+    },
+    accomodation: [],
+    transport: [],
+    services: [],
+    officeInvoice: [],
   });
 
+  console.log(formData.mainDetails)
   const handleChange = (section, field, value) => {
     if (Array.isArray(formData[section])) {
       setFormData({
@@ -73,8 +99,15 @@ export const UserForm = () => {
   
       const userRef = await addDoc(collection(db, "Users"), { id: docRef.id, name: formData.mainDetails.guestName });
 
-      const agentsRef = await addDoc(collection(db, "Agents"), { id: docRef.id, name: formData.mainDetails.agent ,accomodation:formData.accomodation,transport: formData.transport});
-     
+      const agentRef = doc(db, "Agents", formData.mainDetails.agentId);
+      await setDoc(agentRef, {
+        id: formData.mainDetails.agentId,
+        accomodation: formData.accomodation,
+        transport: formData.transport,
+        mainDetails,
+      }, { merge: true });
+      setFormData(initialFormData);
+      toast.success("User Added Successfully")
       console.log("Form data submitted successfully with ID:", docRef.id);
     } catch (error) {
       console.error("Error submitting form data:", error);
@@ -82,19 +115,53 @@ export const UserForm = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+   
+    const fetchAgents = async () => {
+      setLoading(true);
+      try {
+        const agentSnapshot = await getDocs(collection(db, "Agents"));
+        const agentsList = agentSnapshot.docs.map(doc => ({
+          id: doc.id,
+          value : doc?.data()?.name,
+          label :doc?.data()?.name
+        }));
+        setAgentsOptions(agentsList);
+     
+      } catch (error) {
+        console.error("Error fetching agents:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgents();
+  }, []);
   const steps = [
-    { name: 'Main details', component: <Maindetails  data={formData.mainDetails} handleChange={handleChange} /> },
+    { name: 'Main details', component: <Maindetails  data={formData.mainDetails} handleChange={handleChange} agentOptions={agentOptions} />  },
     { name: 'Accomodation', component: <Accomodation formData={formData} setFormData={setFormData} data={formData.accomodation} handleChange={handleChange} /> },
     { name: 'Transport', component: <Transport formData={formData} setFormData={setFormData} data={formData.transport} handleChange={handleChange} /> },
     { name: 'Services', component: <Services formData={formData} setFormData={setFormData} data={formData.services} handleChange={handleChange} /> },
     { name: 'Office Invoice', component: <OfficeInvoice formData={formData} setFormData={setFormData} data={formData.officeInvoice} handleChange={handleChange} /> },
   ];
 
+  
+
   if (loading) {
     return <Loading />;
   } else {
     return (
       <div>
+        <div className='flex flex-row justify-between mb-12'>
+              <div>
+                 <h1 className='text-xl'>Add User/Guest</h1>
+              </div>
+              <div>
+                    <button className="bg-black py-2 px-4 rounded-full text-white " onClick={() => { setPath("users") }}>Back</button>
+              </div>
+             
+        </div>
         <div className="flex flex-row justify-center gap-4 mb-8">
           {steps.map((stepInfo, index) => (
             <div key={index}>

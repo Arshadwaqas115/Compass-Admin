@@ -1,17 +1,31 @@
 "use client";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useState, useEffect } from "react";
+import { MultiSelect } from "react-multi-select-component";
 
+export const Maindetails = ({ data, handleChange, agentOptions }) => {
+  const [selected, setSelected] = useState([]);
 
-export const Maindetails = ({ data, handleChange }) => {
+  const handleSelectChange = (selectedOption) => {
+    setSelected(selectedOption.length > 0 ? [selectedOption[0]] : []);
+  };
 
-  
+  useEffect(() => {
+    if (selected.length > 0) {
+      handleChange("mainDetails", "agent", selected[0].label); 
+      handleChange("mainDetails", "agentId", selected[0].id);
+    } else {
+      handleChange("mainDetails", "agent", "");
+      handleChange("mainDetails", "agentId", "");
+    }
+  }, [selected]);
 
   return (
     <div className="">
-     <div className="mb-8 text-xl">
+      <div className="mb-8 text-xl">
         <h1>Step 1: Main Details</h1>
       </div>
-      <div className="grid grid-cols-3 p-4 pb-2  gap-4">
+      <div className="grid grid-cols-3 p-4 pb-2 gap-4">
         <div className="flex flex-col gap-2">
           <div>
             <h1 className="font-semibold">File no</h1>
@@ -39,21 +53,21 @@ export const Maindetails = ({ data, handleChange }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-           <h1 className="font-semibold">Agent</h1>
+            <h1 className="font-semibold">Agent</h1>
           </div>
           <div>
-            <input
-              type="text"
-              placeholder="agent"
-              className="border p-2 rounded-lg py-3"
-              value={data.agent}
-              onChange={(e) => handleChange("mainDetails", "agent", e.target.value)}
+              <MultiSelect
+              options={agentOptions}
+              value={selected}
+              onChange={handleSelectChange}
+              labelledBy="Select"
+              hasSelectAll={false}
             />
           </div>
         </div>
         <div className="flex flex-col gap-2">
           <div>
-           <h1 className="font-semibold">Guest Name</h1>
+            <h1 className="font-semibold">Guest Name</h1>
           </div>
           <div>
             <input
@@ -67,7 +81,7 @@ export const Maindetails = ({ data, handleChange }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-          <h1 className="font-semibold">Details</h1>
+            <h1 className="font-semibold">Details</h1>
           </div>
           <div>
             <input
@@ -81,7 +95,7 @@ export const Maindetails = ({ data, handleChange }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-          <h1 className="font-semibold">Visa Company</h1>
+            <h1 className="font-semibold">Visa Company</h1>
           </div>
           <div>
             <input
@@ -95,7 +109,7 @@ export const Maindetails = ({ data, handleChange }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-          <h1 className="font-semibold">P/A</h1>
+            <h1 className="font-semibold">P/A</h1>
           </div>
           <div>
             <input
@@ -109,7 +123,7 @@ export const Maindetails = ({ data, handleChange }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-          <h1 className="font-semibold">R/A</h1>
+            <h1 className="font-semibold">R/A</h1>
           </div>
           <div>
             <input
@@ -123,40 +137,36 @@ export const Maindetails = ({ data, handleChange }) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-          <h1 className="font-semibold">Visa Required</h1>
+            <h1 className="font-semibold">Visa Required</h1>
           </div>
           <div>
             <select
               name="Visa Required"
               className="w-40 p-2"
               value={data.visaRequired}
-              onChange={(e) => {
-                handleChange("mainDetails", "visaRequired", e.target.value)}
-        
-                }
+              onChange={(e) => handleChange("mainDetails", "visaRequired", e.target.value)}
             >
               <option value="no">No</option>
-              <option value="yes" >Yes</option>
+              <option value="yes">Yes</option>
             </select>
           </div>
         </div>
-        {data.visaRequired === 'yes' && (
-             <div className="flex flex-col gap-2">
-             <div>
-             <h1 className="font-semibold">How many?</h1>
-             </div>
-             <div>
-               <input
-                 type="text"
-                 placeholder="visa count"
-                 className="border p-2 rounded-lg py-3"
-                 value={data.visaCount}
-                 onChange={(e) => handleChange("mainDetails", "visaCount", e.target.value)}
-               />
-             </div>
-           </div>
+        {data.visaRequired === "yes" && (
+          <div className="flex flex-col gap-2">
+            <div>
+              <h1 className="font-semibold">How many?</h1>
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="visa count"
+                className="border p-2 rounded-lg py-3"
+                value={data.visaCount}
+                onChange={(e) => handleChange("mainDetails", "visaCount", e.target.value)}
+              />
+            </div>
+          </div>
         )}
-       
       </div>
     </div>
   );

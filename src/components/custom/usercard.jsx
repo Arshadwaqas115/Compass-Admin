@@ -1,6 +1,7 @@
 import { Avatar } from '@mui/material';
 
 export const Card = ({ item, setPath, setDocId, type, setType }) => {
+  console.log(item)
   const handleClick = () => {
     if (type === 'User') { 
       setDocId(item?.id);
@@ -8,7 +9,7 @@ export const Card = ({ item, setPath, setDocId, type, setType }) => {
       setType(type);
     }
     else if(type === "Agent"){
-      setDocId(item?.refid);
+      setDocId(item?.id);
       setPath('chart');
       setType(type);
     }
