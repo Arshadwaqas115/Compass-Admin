@@ -17,6 +17,7 @@ export const UserForm = ({setPath}) => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
   const [agentOptions,setAgentsOptions] = useState([])
+  const [vendorOptions,setVendorOptions] = useState([])
   const initialFormData = {
     mainDetails: {
       fileNo: "",
@@ -58,7 +59,7 @@ export const UserForm = ({setPath}) => {
     officeInvoice: [],
   });
 
-  console.log(formData.mainDetails)
+
   const handleChange = (section, field, value) => {
     if (Array.isArray(formData[section])) {
       setFormData({
@@ -118,7 +119,7 @@ export const UserForm = ({setPath}) => {
 
   useEffect(() => {
    
-    const fetchAgents = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
         const agentSnapshot = await getDocs(collection(db, "Agents"));
@@ -128,6 +129,14 @@ export const UserForm = ({setPath}) => {
           label :doc?.data()?.name
         }));
         setAgentsOptions(agentsList);
+
+        const vendorSnapshot = await getDocs(collection(db, "Vendors"));
+        const vendorslist = vendorSnapshot.docs.map(doc => ({
+          id: doc.id,
+          value : doc?.data()?.name,
+          label :doc?.data()?.name
+        }));
+        setVendorOptions(vendorslist);
      
       } catch (error) {
         console.error("Error fetching agents:", error);
@@ -136,14 +145,51 @@ export const UserForm = ({setPath}) => {
       }
     };
 
-    fetchAgents();
+
+      
+    fetchData();
   }, []);
   const steps = [
-    { name: 'Main details', component: <Maindetails  data={formData.mainDetails} handleChange={handleChange} agentOptions={agentOptions} />  },
-    { name: 'Accomodation', component: <Accomodation formData={formData} setFormData={setFormData} data={formData.accomodation} handleChange={handleChange} /> },
-    { name: 'Transport', component: <Transport formData={formData} setFormData={setFormData} data={formData.transport} handleChange={handleChange} /> },
-    { name: 'Services', component: <Services formData={formData} setFormData={setFormData} data={formData.services} handleChange={handleChange} /> },
-    { name: 'Office Invoice', component: <OfficeInvoice formData={formData} setFormData={setFormData} data={formData.officeInvoice} handleChange={handleChange} /> },
+    { name: 'Main details', 
+      component: <Maindetails  
+      data={formData.mainDetails} 
+      handleChange={handleChange} 
+      agentOptions={agentOptions} /> 
+   },
+
+    { name: 'Accomodation', 
+      component: <Accomodation 
+      mainDetails={formData.mainDetails}
+      vendorOptions={vendorOptions} 
+      formData={formData} 
+      setFormData={setFormData} 
+      data={formData.accomodation} 
+      handleChange={handleChange} /> 
+    },
+
+    { name: 'Transport', 
+      component: 
+      <Transport 
+      formData={formData} 
+      setFormData={setFormData} 
+      data={formData.transport} 
+      handleChange={handleChange} 
+      /> 
+    },
+
+    { name: 'Services', 
+      component: <Services 
+      formData={formData} setFormData={setFormData}
+       data={formData.services} handleChange={handleChange}
+       /> 
+    },
+
+
+    { name: 'Office Invoice', 
+      component: <OfficeInvoice formData={formData} setFormData={setFormData}
+       data={formData.officeInvoice} 
+       handleChange={handleChange} /> 
+    },
   ];
 
   

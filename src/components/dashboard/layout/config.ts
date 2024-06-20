@@ -4,6 +4,7 @@ import { paths } from '@/paths';
 export const navItems = [
   { key: 'user_agent_list', title: 'Users', href: paths.dashboard.user_agent_list, icon: 'plugs-connected' },
   { key: 'agents', title: 'Agents', href: paths.dashboard.agents, icon: 'users' },
+  { key: 'vendors', title: 'Vendors', href:paths.dashboard.vendors,  icon:'users'} ,
   //  {key: 'add-user', title:'Add User',  href: paths.dashboard.detail , icon: 'users'},
   { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'chart-pie' },
 

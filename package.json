@@ -43,6 +43,7 @@
     "react-hook-form": "7.51.0",
     "react-minimalistic-gantt": "^0.0.24",
     "react-multi-select-component": "^4.3.4",
+    "react-select": "^5.8.0",
     "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
     "toastify": "^2.0.1",
