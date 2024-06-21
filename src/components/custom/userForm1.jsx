@@ -92,7 +92,7 @@ export const UserForm = () => {
         name:userName,
         createdAt: Date.now()
       }
-      const userRef = await addDoc(collection(db, "users"), userData);
+      // const userRef = await addDoc(collection(db, "users"), userData);
       
       setLoading(false);
       setSubLocations([])
@@ -205,7 +205,7 @@ export const UserForm = () => {
                                   
                                       {sublocations?.map((item,index)=>{
                                         return(
-                                          <div>
+                                          <div key={index}>
                                                <Sublocation item={item} key={index} deleteSubLocation={deleteSubLocation}/>
                                           </div>
                                         )

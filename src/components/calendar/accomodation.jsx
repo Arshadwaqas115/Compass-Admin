@@ -49,7 +49,7 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
         <li className='italic'>Government-issued photo identification and a credit card debit card or cash deposit may be required at check-in for incidental charges.</li>
         <li className='italic'>Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed.</li>
         <li className='italic'>Noise-free guestrooms cannot be guaranteed.</li>
-        <li className='italic'>Booking Details Can't be amended or modified.</li>
+        <li className='italic'>Booking Details Cant be amended or modified.</li>
         <li className='italic'>Full Stay Will be charged in Case Of Cancellation or No Show.</li>
         <li className='italic'>Full Stay will be charged in Case of Early Departure.</li>
         <li className='italic'>PS: Children sharing bed with the parents (no additional bed).</li>
@@ -60,6 +60,8 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
     </div>
   </div>
 ));
+
+Voucher.displayName = 'Voucher';
 
 export const Accomodation = ({ data, customer,type }) => {
   const customerHeaders = [

@@ -9,7 +9,7 @@ import { Transport } from '../../../components/calendar/transport';
 import { Services } from '../../../components/calendar/services';
 import { OfficeInvoice } from '../../../components/calendar/officeInvoice';
 
-const Chart = ({ setPath, docId, setDocId, type }) => {
+const Chart = ({ setPath, docId, type }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const [step, setStep] = useState(0);

@@ -5,13 +5,13 @@ export const OfficeInvoice = ({  data }) => {
     'Total P/A', 'Total R/A', 'RoE', 'PKR P/A', 'PKR R/A'
   ];
 
-  const [rowData, setRowData] = useState({
-    totalpa: '',
-    totalra: '',
-    roe: '',
-    pkrpa: '',
-    pkrra: '',
-  });
+  // const [rowData, setRowData] = useState({
+  //   totalpa: '',
+  //   totalra: '',
+  //   roe: '',
+  //   pkrpa: '',
+  //   pkrra: '',
+  // });
 
   
   return (

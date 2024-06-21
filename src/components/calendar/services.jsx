@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-export const Services = ({ formData, setFormData, data, handleChange }) => {
+export const Services = ({ data }) => {
   const headers = ["Service", "Charges", "Staff"];
 
-  const [rowData, setRowData] = useState({
-    service: "",
-    charges: "",
-    staff: "",
-  });
+  // const [rowData, setRowData] = useState({
+  //   service: "",
+  //   charges: "",
+  //   staff: "",
+  // });
 
   
 

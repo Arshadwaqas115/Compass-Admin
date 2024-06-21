@@ -19,7 +19,7 @@ export const AgentForm = ({ setPath }) => {
     setLoading(true);
 
     try {
-      const agentRef = await addDoc(collection(db, "Agents"), { name: agent });
+      // const agentRef = await addDoc(collection(db, "Agents"), { name: agent });
       setPath("agents");
       setLoading(false);
     } catch (error) {

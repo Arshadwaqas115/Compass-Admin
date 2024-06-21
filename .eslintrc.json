@@ -74,3 +74,28 @@
 //     '@next/next/no-img-element': 'off', // Temporary disabled
 //   },
 // };
+
+
+
+
+
+{
+  "extends": ["next", "next/core-web-vitals"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020, // or a later version
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true
+  },
+  "plugins": ["@typescript-eslint"]
+  // "extends": [
+  //   "eslint:recommended",
+  //   "plugin:react/recommended",
+  //   "plugin:@next/next/recommended"
+  // ],
+  // "rules": {
+  //   // Your custom rules
+  // }
+}

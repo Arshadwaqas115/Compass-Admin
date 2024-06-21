@@ -4,7 +4,7 @@
 import Chart from "./Chart";
 import { useState } from "react";
 import {Customers} from "./customers"
-import {EditForm} from "./editForm"
+// import {EditForm} from "./editForm"
 import { UserForm } from "@/components/add-user/userForm";
 const Page = () => {
 

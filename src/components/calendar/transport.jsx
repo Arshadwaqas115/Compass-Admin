@@ -55,6 +55,8 @@ const TransportVoucher = forwardRef(({ printData }, ref) => (
   </div>
 ));
 
+TransportVoucher.displayName = 'TransportVoucher';
+
 export const Transport = ({ data, customer ,type }) => {
 
   
