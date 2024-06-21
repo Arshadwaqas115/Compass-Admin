@@ -6,7 +6,7 @@ export const paths = {
     vendors:'/dashboard/vendors',
     detail : '/dashboard/add-user',
     user_agent_list: '/dashboard/users',
-    overview: '/dashboard'
+    // overview: '/dashboard'
   },
   errors: { notFound: '/errors/not-found' },
 } as const;

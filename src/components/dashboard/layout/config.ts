@@ -6,7 +6,7 @@ export const navItems = [
   { key: 'agents', title: 'Agents', href: paths.dashboard.agents, icon: 'users' },
   { key: 'vendors', title: 'Vendors', href:paths.dashboard.vendors,  icon:'users'} ,
   //  {key: 'add-user', title:'Add User',  href: paths.dashboard.detail , icon: 'users'},
-  { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'chart-pie' },
+  // { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'chart-pie' },
 
   // { key: 'customers', title: 'Customers', href: paths.dashboard.customers, icon: 'users' },
   // { key: 'integrations', title: 'Integrations', href: paths.dashboard.integrations, icon: 'plugs-connected' },
