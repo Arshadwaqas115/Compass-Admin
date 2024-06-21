@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-
 import type { User } from '@/types/user';
 import { authClient } from '@/lib/auth/client';
 import { logger } from '@/lib/default-logger';
@@ -29,7 +28,6 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
   const checkSession = React.useCallback(async (): Promise<void> => {
     try {
       const { data, error } = await authClient.getUser();
-
       if (error) {
         logger.error(error);
         setState((prev) => ({ ...prev, user: null, error: 'Something went wrong', isLoading: false }));

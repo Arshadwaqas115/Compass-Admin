@@ -1,17 +1,18 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCyWus7J1DFTmEWZOxO9LxanClZLE8VCWk",
-    authDomain: "crm-project-22c8b.firebaseapp.com",
-    projectId: "crm-project-22c8b",
-    storageBucket: "crm-project-22c8b.appspot.com",
-    messagingSenderId: "242026830824",
-    appId: "1:242026830824:web:93325a2023a9cf7065625d",
-    measurementId: "G-PST38YRZJ3"
-  };
-  
+  apiKey: "AIzaSyCbKII-58eBE_4voeZ84x-QTy3BFneyfT0",
+  authDomain: "compass-dc245.firebaseapp.com",
+  projectId: "compass-dc245",
+  storageBucket: "compass-dc245.appspot.com",
+  messagingSenderId: "510532264460",
+  appId: "1:510532264460:web:d410840da967241bb4c429",
+  measurementId: "G-4QKTY1Q0VV"
+};
 
 const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app)
 export const db = getFirestore(app);
 
