@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import RouterLink from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 // import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -18,9 +18,32 @@ import { isNavItemActive } from '@/lib/is-nav-item-active';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
+import { Button } from '@mui/material';
+import { authClient } from '@/lib/auth/client';
+import { logger } from '@/lib/default-logger';
+import { useUser } from '@/hooks/use-user';
 
 export function SideNav(): React.JSX.Element {
   const pathname = usePathname();
+  const { checkSession } = useUser();
+  const router = useRouter();
+
+  const handleSignOut = React.useCallback(async (): Promise<void> => {
+    try {
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        logger.error('Sign out error', error);
+        return;
+      }
+
+      await checkSession?.();
+
+      router.refresh();
+    } catch (err) {
+      logger.error('Sign out error', err);
+    }
+  }, [checkSession, router]);
 
   return (
     <Box
@@ -74,7 +97,7 @@ export function SideNav(): React.JSX.Element {
       </Stack>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Box component="nav" sx={{ flex: '1 1 auto', p: '12px' }}>
-        {renderNavItems({ pathname, items: navItems })}
+        {renderNavItems({ pathname, items: navItems, handleSignOut })}
       </Box>
       {/* <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Stack spacing={2} sx={{ p: '12px' }}>
@@ -110,7 +133,7 @@ export function SideNav(): React.JSX.Element {
   );
 }
 
-function renderNavItems({ items = [], pathname }: { items?: NavItemConfig[]; pathname: string }): React.JSX.Element {
+function renderNavItems({ items = [], pathname, handleSignOut }: { items?: NavItemConfig[]; pathname: string, handleSignOut: () => void }): React.JSX.Element {
   const children = items.reduce((acc: React.ReactNode[], curr: NavItemConfig): React.ReactNode[] => {
     const { key, ...item } = curr;
 
@@ -120,9 +143,12 @@ function renderNavItems({ items = [], pathname }: { items?: NavItemConfig[]; pat
   }, []);
 
   return (
-    <Stack component="ul" spacing={1} sx={{ listStyle: 'none', m: 0, p: 0 }}>
-      {children}
-    </Stack>
+    <>
+      <Stack component="ul" spacing={1} sx={{ listStyle: 'none', m: 0, p: 0 }}>
+        {children}
+      </Stack>
+      <Button onClick={handleSignOut}>Logout</Button>
+    </>
   );
 }
 
