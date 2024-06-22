@@ -50,7 +50,9 @@ class AuthClient {
     const { email, password } = params;
     const { user } = await signInWithEmailAndPassword(auth as Auth, email, password);
     localStorage.setItem('custom-auth-token', user.accessToken);
+    
     return {};
+    
   }
 
   async resetPassword(_: ResetPasswordParams): Promise<{ error?: string }> {
