@@ -11,7 +11,6 @@ function generateToken(): string {
   return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
 }
 
-const user = auth.currentUser;
 
 export interface SignUpParams {
   firstName: string;
