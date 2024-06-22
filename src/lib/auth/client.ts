@@ -1,7 +1,7 @@
 'use client';
 
 import type { User } from '@/types/user';
-import { Auth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/firebase';
 
 
@@ -10,6 +10,8 @@ function generateToken(): string {
   window.crypto.getRandomValues(arr);
   return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
 }
+
+const user = auth.currentUser;
 
 export interface SignUpParams {
   firstName: string;
@@ -32,14 +34,17 @@ export interface ResetPasswordParams {
 }
 
 class AuthClient {
-  async signUp(_: SignUpParams): Promise<{ error?: string }> {
-    // Make API request
+  async signUp(params: SignUpParams): Promise<{ error?: string }> {
+    const { email, password } = params;
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth as Auth, email, password);
+      const token = await user.getIdToken();
+      localStorage.setItem('custom-auth-token', token);
 
-    // We do not handle the API, so we'll just generate a token and store it in localStorage.
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
-
-    return {};
+      return {};
+    } catch (error: any) {
+      return { error: error.message };
+    }
   }
 
   async signInWithOAuth(_: SignInWithOAuthParams): Promise<{ error?: string }> {
@@ -49,7 +54,9 @@ class AuthClient {
   async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
     const { email, password } = params;
     const { user } = await signInWithEmailAndPassword(auth as Auth, email, password);
-    localStorage.setItem('custom-auth-token', user.accessToken);
+    const token = await user.getIdToken();
+    localStorage.setItem('custom-auth-token', token);
+
     return {};
   }
 
@@ -61,15 +68,22 @@ class AuthClient {
     return { error: 'Update reset not implemented' };
   }
 
-  async getUser(): Promise<{ data?: User | null; error?: string }> {
+  async getUser(): Promise<{ data: User | null; error?: string }> {
 
     const token = localStorage.getItem('custom-auth-token');
-    console.log(token);
     if (!token) {
       return { data: null };
     }
+    const user = auth.currentUser
+    const activeUser: User = {
+      uid: user?.uid,
+      email: user?.email,
+      displayName: user?.displayName,
+      photoURL: user?.photoURL,
+      accessToken: await user?.getIdToken(),
+    };
 
-    return { data: user };
+    return { data: activeUser };
   }
   
 

@@ -1,9 +1,10 @@
 export interface User {
   accessToken?: string | unknown;
-  id: string;
+  uid?: string;
   name?: string;
   avatar?: string;
-  email?: string;
+  email?: string | null;
+  signature?: string;
 
   [key: string]: unknown;
 }
