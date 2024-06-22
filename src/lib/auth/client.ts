@@ -5,13 +5,6 @@ import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from
 import { auth } from '../../firebase/firebase';
 
 
-function generateToken(): string {
-  const arr = new Uint8Array(12);
-  window.crypto.getRandomValues(arr);
-  return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
-}
-
-
 export interface SignUpParams {
   firstName: string;
   lastName: string;
@@ -57,6 +50,7 @@ class AuthClient {
     localStorage.setItem('custom-auth-token', token);
 
     return {};
+    
   }
 
   async resetPassword(_: ResetPasswordParams): Promise<{ error?: string }> {
