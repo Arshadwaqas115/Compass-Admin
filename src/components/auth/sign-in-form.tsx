@@ -19,10 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
-
 import { paths } from '@/paths';
-import { auth } from '../../firebase/firebase';
-import { UserContext } from '../../contexts/user-context';
 
 const schema = zod.object({
   email: zod.string().min(1, { message: 'Email is required' }).email(),
@@ -35,7 +32,7 @@ const defaultValues = { email: 'sofia@devias.io', password: 'Secret1' } satisfie
 
 export function SignInForm(): React.JSX.Element {
   const router = useRouter();
-  const { user, checkSession } = React.useContext(UserContext);
+  const { checkSession } = useUser();
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [isPending, setIsPending] = React.useState<boolean>(false);
 
@@ -62,8 +59,8 @@ export function SignInForm(): React.JSX.Element {
         setError('root', { type: 'server', message: error.message });
         setIsPending(false);
       } finally {
-        await checkSession();
-        router.replace(paths.dashboard.overview);
+        await checkSession?.();
+        router.replace(paths.dashboard.agents);
       }
     },
     [checkSession, router, setError]
