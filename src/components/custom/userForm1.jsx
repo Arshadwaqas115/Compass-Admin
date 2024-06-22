@@ -92,7 +92,7 @@ export const UserForm = () => {
         name:userName,
         createdAt: Date.now()
       }
-      // const userRef = await addDoc(collection(db, "users"), userData);
+      await addDoc(collection(db, "users"), userData);
       
       setLoading(false);
       setSubLocations([])
