@@ -34,7 +34,7 @@ const NewModal = ({ show, onClose, filteredData }) => {
   const debounceOptionClicked = useCallback(
     debounce((option, data) => {
       filterAccordingToOption(option, data);
-    }, 500), // 500ms delay
+    }, 1000), // 500ms delay
     []
   );
 
