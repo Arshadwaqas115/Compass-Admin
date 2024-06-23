@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-const NewModal = ({ show, onClose }) => {
+const NewModal = ({ show, onClose, filteredData }) => {
   const dummyArray = [
     { title: 'Hotel Vendor', type: 'dropdown' },
     { title: 'Agent Name', type: 'dropdown' },
@@ -33,13 +33,14 @@ const NewModal = ({ show, onClose }) => {
 
   const debounceOptionClicked = useCallback(
     debounce((option, data) => {
-      filterAccordingToOption(option, data);
+      awaitfilterAccordingToOption(option, data);
     }, 500), // 500ms delay
     []
   );
 
   const handleInputChange = (option, value) => {
     debounceOptionClicked(option, value);
+    filteredData(filteredDocuments);
   };
 
   const getVendors = async () => {
@@ -152,8 +153,9 @@ const NewModal = ({ show, onClose }) => {
     document.body.style.overflow = 'unset';
   };
 
-  const optionClicked = (option, data) => {
-    filterAccordingToOption(option, data);
+  const optionClicked = async (option, data) => {
+    await filterAccordingToOption(option, data);
+    filteredData(filteredDocuments);
   };
 
   return (

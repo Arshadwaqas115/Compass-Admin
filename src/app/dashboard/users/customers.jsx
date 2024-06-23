@@ -9,6 +9,7 @@ import NewModal from '../../../components/modal/modal';
 
 export const Customers = ({ setPath, setDocId, setType }) => {
   const [showModal, setShowModal] = useState(false);
+  const [dataFromChild, setDataFromChild] = useState('');
 
   const handleSearchClick = () => {
     setShowModal(true);
@@ -48,6 +49,10 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   }, []);
 
   useEffect(() => {
+    console.log('DatafromChild: ', dataFromChild);
+  }, [dataFromChild]);
+
+  useEffect(() => {
     console.log('Users: ', users);
     const userResults = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredUsers(userResults);
@@ -59,9 +64,14 @@ export const Customers = ({ setPath, setDocId, setType }) => {
 
   const noResultsMessage = 'No results to display.';
 
+  const receivedFilteredData = (data) => {
+    alert('Parent called!');
+    setDataFromChild(data);
+  };
+
   return (
     <div className="p-4">
-      <NewModal show={showModal} onClose={handleClose} />
+      <NewModal show={showModal} onClose={handleClose} filteredData={receivedFilteredData} />
       <div className="flex items-center justify-between border-b mb-4">
         <h1 className="text-xl p-4">Users</h1>
         <div className="flex items-center space-x-2">
