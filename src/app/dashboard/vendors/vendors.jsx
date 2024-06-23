@@ -1,18 +1,21 @@
-import { Loading } from "@/components/custom/loading";
-import { db } from "@/firebase/firebase";
-import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import {Card} from "../../../components/custom/usercard";
+import { useEffect, useState } from 'react';
+import { db } from '@/firebase/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+
+import { Loading } from '@/components/custom/loading';
+
+import { Card } from '../../../components/custom/usercard';
+
 export const Vendors = ({ setPath, setDocId, setType }) => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const getUsersData = async () => {
     setLoading(true);
     try {
-      const userQuerySnapshot = await getDocs(collection(db, "Vendors"));
+      const userQuerySnapshot = await getDocs(collection(db, 'Vendors'));
       let usersTemp = [];
       userQuerySnapshot.forEach((doc) => {
         usersTemp.push({ id: doc.id, ...doc.data() });
@@ -32,9 +35,8 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
   }, []);
 
   useEffect(() => {
-    const userResults = users.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    console.log('Vendors: ', users);
+    const userResults = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredUsers(userResults);
   }, [searchTerm, users]);
 
@@ -42,7 +44,7 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
     return <Loading />;
   }
 
-  const noResultsMessage = "No results to display.";
+  const noResultsMessage = 'No results to display.';
 
   return (
     <div className="p-4">
@@ -52,18 +54,24 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
         </div>
         <div className="flex  items-center gap-4">
           <div>
-              <input
-                type="text"
-                placeholder="Search by vendor name"
-                className="p-2 placeholder:text-center border border-gray-300 rounded"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <input
+              type="text"
+              placeholder="Search by vendor name"
+              className="p-2 placeholder:text-center border border-gray-300 rounded"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div>
-                <button onClick={()=>{setPath("add")}} className=" w-10 bg-green-300 text-white  h-10 rounded-full border"><h1 className="text-2xl">+</h1></button>
+            <button
+              onClick={() => {
+                setPath('add');
+              }}
+              className=" w-10 bg-green-300 text-white  h-10 rounded-full border"
+            >
+              <h1 className="text-2xl">+</h1>
+            </button>
           </div>
-          
         </div>
       </div>
 
@@ -72,14 +80,7 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
           <div>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((item, index) => (
-                <Card
-                  key={index}
-                  item={item}
-                  setPath={setPath}
-                  setDocId={setDocId}
-                  type="Vendor"
-                  setType={setType}
-                />
+                <Card key={index} item={item} setPath={setPath} setDocId={setDocId} type="Vendor" setType={setType} />
               ))
             ) : (
               <p className="">{noResultsMessage}</p>

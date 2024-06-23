@@ -1,29 +1,27 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { serviceOptions, staffOptions } from '@/extra/data';
+import Select from 'react-select';
 
 export const Services = ({ formData, setFormData, data, handleChange }) => {
-  const headers = ["Service", "Charges", "Staff"];
+  const headers = ['Service', 'Charges', 'Staff'];
 
   const [rowData, setRowData] = useState({
-    service: "",
-    charges: "",
-    staff: "",
+    service: '',
+    charges: '',
+    staff: '',
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
-  const handleInputChange = (e, field) => {
-    const value = e.target.value;
+  const handleInputChange = (value, field) => {
     setRowData({ ...rowData, [field]: value });
   };
 
   const handleAddRow = () => {
-    
     for (const key in rowData) {
-      if (rowData[key] === "") {
-        alert(
-          `Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`
-        );
+      if (rowData[key] === '') {
+        alert(`Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`);
         return;
       }
     }
@@ -35,13 +33,13 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
       setIsEditing(false);
       setEditIndex(null);
     } else {
-      handleChange("services", null, rowData); 
+      handleChange('services', null, rowData);
     }
 
     setRowData({
-      service: "",
-      charges: "",
-      staff: "",
+      service: '',
+      charges: '',
+      staff: '',
     });
   };
 
@@ -68,23 +66,38 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
           return (
             <div key={index} className="flex flex-col gap-2">
               <label className="font-semibold">{header}</label>
-              <input
-                type={header === "Charges" ? "number" : "text"}
-                placeholder={header}
-                className="border p-2 rounded-lg"
-                value={rowData[field]}
-                onChange={(e) => handleInputChange(e, field)}
-              />
+              {header === 'Service' ? (
+                <Select
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={serviceOptions.find((option) => option.value === rowData[field])}
+                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  options={serviceOptions}
+                />
+              ) : header === 'Staff' ? (
+                <Select
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={staffOptions.find((option) => option.value === rowData[field])}
+                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  options={staffOptions}
+                />
+              ) : (
+                <input
+                  type={header === 'Charges' ? 'number' : 'text'}
+                  placeholder={header}
+                  className="border p-2 rounded-lg"
+                  value={rowData[field]}
+                  onChange={(e) => handleInputChange(e.target.value, field)}
+                />
+              )}
             </div>
           );
         })}
       </div>
       <div className="flex items-center justify-end">
-        <button
-          onClick={handleAddRow}
-          className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40"
-        >
-          {isEditing ? "Save" : "Add"}
+        <button onClick={handleAddRow} className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40">
+          {isEditing ? 'Save' : 'Add'}
         </button>
       </div>
       <div className="mt-8">
@@ -119,10 +132,7 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
                     >
                       Edit
                     </button>
-                    <button
-                      onClick={() => handleDeleteRow(rowIndex)}
-                      className="bg-red-500 text-white p-1 rounded"
-                    >
+                    <button onClick={() => handleDeleteRow(rowIndex)} className="bg-red-500 text-white p-1 rounded">
                       Delete
                     </button>
                   </td>

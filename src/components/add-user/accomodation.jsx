@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import { roomOptions, mealOptions } from "../../extra/data";
-import Select from "react-select";
+import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
+
+import { hotelOptions, mealOptions, roomOptions } from '../../extra/data';
 
 const headers = [
   'File No',
@@ -23,10 +24,9 @@ const headers = [
 ];
 
 export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails }) => {
-
   const [rowData, setRowData] = useState({
     fileno: mainDetails.fileNo,
-    guestname:mainDetails.guestName,
+    guestname: mainDetails.guestName,
     city: '',
     ref: '',
     hotelname: '',
@@ -48,7 +48,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   useEffect(() => {
     if (rowData.checkinn && rowData.checkout) {
       const nights = calculateNights(rowData.checkinn, rowData.checkout);
-      setRowData(prevRowData => ({ ...prevRowData, nights: nights.toString() }));
+      setRowData((prevRowData) => ({ ...prevRowData, nights: nights.toString() }));
     }
   }, [rowData.checkinn, rowData.checkout]);
 
@@ -79,7 +79,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     }
 
     if (rowData.nights <= 0) {
-      alert("Check Out date must be later than Check Inn date");
+      alert('Check Out date must be later than Check Inn date');
       return;
     }
 
@@ -98,7 +98,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
 
     setRowData({
       fileNo: mainDetails.fileNo,
-      guestname:mainDetails.guestName,
+      guestname: mainDetails.guestName,
       city: '',
       ref: '',
       hotelname: '',
@@ -115,7 +115,6 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     });
   };
 
- 
   const handleEditRow = (index) => {
     setRowData(data[index]);
     setIsEditing(true);
@@ -133,61 +132,68 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
         <h1>Step 2: Accommodation</h1>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {headers.filter(header => header !== 'File No' && header !== 'Guest Name').map((header, index) => {
-          const field = header.toLowerCase().replace(/ /g, '');
-          return (
-            <div key={index} className="flex flex-col gap-2">
-              <label className="font-semibold">{header}</label>
-              {header === 'Room Type' ? (
-                <Select
-                  placeholder={header}
-                  className="p-2 rounded-lg"
-                  value={roomOptions.find(option => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                  options={roomOptions}
-                />
-              ) : header === "Vendor" ? (
-                <Select
-                  placeholder={header}
-                  className="p-2 rounded-lg"
-                  value={vendorOptions.find(option => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                  options={vendorOptions}
-                />
-              ) : header === "Meals" ? (
-                <Select
-                  placeholder={header}
-                  className="p-2 rounded-lg"
-                  value={mealOptions.find(option => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                  options={mealOptions}
-                />
-              ) : header === 'Nights' ? (
-                <input
-                  type="text"
-                  placeholder={header}
-                  className="border p-2 rounded-lg"
-                  value={rowData[field]}
-                  readOnly
-                />
-              ) : (
-                <input
-                  type={header === 'Check Inn' || header === 'Check Out' ? 'date' : 'text'}
-                  placeholder={header}
-                  className="border p-2 rounded-lg"
-                  value={rowData[field]}
-                  onChange={(e) => handleInputChange(e.target.value, field)}
-                />
-              )}
-            </div>
-          );
-        })}
+        {headers
+          .filter((header) => header !== 'File No' && header !== 'Guest Name')
+          .map((header, index) => {
+            const field = header.toLowerCase().replace(/ /g, '');
+            return (
+              <div key={index} className="flex flex-col gap-2">
+                <label className="font-semibold">{header}</label>
+                {header === 'Room Type' ? (
+                  <Select
+                    placeholder={header}
+                    className="p-2 rounded-lg"
+                    value={roomOptions.find((option) => option.value === rowData[field])}
+                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    options={roomOptions}
+                  />
+                ) : header === 'Hotel Name' ? (
+                  <Select
+                    placeholder={header}
+                    className="p-2 rounded-lg"
+                    value={hotelOptions.find((option) => option.value === rowData[field])}
+                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    options={hotelOptions}
+                  />
+                ) : header === 'Vendor' ? (
+                  <Select
+                    placeholder={header}
+                    className="p-2 rounded-lg"
+                    value={vendorOptions.find((option) => option.value === rowData[field])}
+                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    options={vendorOptions}
+                  />
+                ) : header === 'Meals' ? (
+                  <Select
+                    placeholder={header}
+                    className="p-2 rounded-lg"
+                    value={mealOptions.find((option) => option.value === rowData[field])}
+                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    options={mealOptions}
+                  />
+                ) : header === 'Nights' ? (
+                  <input
+                    type="text"
+                    placeholder={header}
+                    className="border p-2 rounded-lg"
+                    value={rowData[field]}
+                    readOnly
+                  />
+                ) : (
+                  <input
+                    type={header === 'Check Inn' || header === 'Check Out' ? 'date' : 'text'}
+                    placeholder={header}
+                    className="border p-2 rounded-lg"
+                    value={rowData[field]}
+                    onChange={(e) => handleInputChange(e.target.value, field)}
+                  />
+                )}
+              </div>
+            );
+          })}
       </div>
-      <div className='flex items-center justify-end'>
-        <button
-          onClick={handleAddRow}
-          className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40"
-        >
+      <div className="flex items-center justify-end">
+        <button onClick={handleAddRow} className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40">
           {isEditing ? 'Save' : 'Add'}
         </button>
       </div>
@@ -223,10 +229,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     >
                       Edit
                     </button>
-                    <button
-                      onClick={() => handleDeleteRow(rowIndex)}
-                      className="bg-red-500 text-white p-1 rounded"
-                    >
+                    <button onClick={() => handleDeleteRow(rowIndex)} className="bg-red-500 text-white p-1 rounded">
                       Delete
                     </button>
                   </td>

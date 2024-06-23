@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
+import { sectorOptions, vehicleOptions } from '@/extra/data';
+import Select from 'react-select';
 
-export const Transport = ({  formData,data, setFormData, handleChange }) => {
+export const Transport = ({ formData, data, setFormData, handleChange }) => {
   const headers = [
-    'Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Booked', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point'
+    'Vehicle',
+    'Ref',
+    'Date',
+    'Sector',
+    'Vendor',
+    'Flight Details',
+    'R/A',
+    'P/A',
+    'Remarks',
+    'Pick Point',
+    'Drop Point',
   ];
 
   const [rowData, setRowData] = useState({
@@ -11,7 +23,7 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
     date: '',
     sector: '',
     vendor: '',
-    booked: '',
+    flightdetails: '',
     ra: '',
     pa: '',
     remarks: '',
@@ -21,18 +33,17 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  console.log(rowData)
-  const handleInputChange = (e, field) => {
-    let value = e.target.value;
-  
-    if (field === "r/a") {
-      field = "ra";
-    } else if (field === "p/a") {
-      field = "pa";
+  console.log(rowData);
+
+  const handleInputChange = (value, field) => {
+    if (field === 'r/a') {
+      field = 'ra';
+    } else if (field === 'p/a') {
+      field = 'pa';
     }
-  
     setRowData({ ...rowData, [field]: value });
   };
+
   const handleAddRow = () => {
     // Check for empty fields
     for (const key in rowData) {
@@ -45,10 +56,9 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
     if (isEditing) {
       const updatedData = [...data];
       updatedData[editIndex] = rowData;
-      setFormData( { ...formData, transport: updatedData });
+      setFormData({ ...formData, transport: updatedData });
       setIsEditing(false);
       setEditIndex(null);
-      
     } else {
       handleChange('transport', null, rowData);
     }
@@ -59,7 +69,7 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
       date: '',
       sector: '',
       vendor: '',
-      booked: '',
+      flightdetails: '',
       ra: '',
       pa: '',
       remarks: '',
@@ -68,9 +78,7 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
     });
   };
 
-  
   const handleEditRow = (index) => {
- 
     const transformedData = { ...data[index] };
     if (transformedData['R/A']) {
       transformedData.ra = transformedData['R/A'];
@@ -80,7 +88,7 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
       transformedData.pa = transformedData['P/A'];
       delete transformedData['P/A'];
     }
-    
+
     setRowData(transformedData);
     setIsEditing(true);
     setEditIndex(index);
@@ -88,7 +96,7 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
 
   const handleDeleteRow = (index) => {
     const updatedTransport = data.filter((item, i) => i !== index);
-    setFormData( { ...formData, transport: updatedTransport });
+    setFormData({ ...formData, transport: updatedTransport });
   };
 
   return (
@@ -98,26 +106,41 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
       </div>
       <div className="grid grid-cols-3 gap-4">
         {headers.map((header, index) => {
-          const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
+          const field = header.toLowerCase().replace(/ /g, '');
           return (
             <div key={index} className="flex flex-col gap-2">
               <label className="font-semibold">{header}</label>
-              <input
-                type={header === 'Date' ? 'date' : 'text'}
-                placeholder={header}
-                className="border p-2 rounded-lg"
-                value={rowData[field]}
-                onChange={(e) => handleInputChange(e, field)}
-              />
+              {header === 'Vehicle' ? (
+                <Select
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={vehicleOptions.find((option) => option.value === rowData[field])}
+                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  options={vehicleOptions}
+                />
+              ) : header === 'Sector' ? (
+                <Select
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={sectorOptions.find((option) => option.value === rowData[field])}
+                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  options={sectorOptions}
+                />
+              ) : (
+                <input
+                  type={header === 'Date' ? 'date' : 'text'}
+                  placeholder={header}
+                  className="border p-2 rounded-lg"
+                  value={rowData[field]}
+                  onChange={(e) => handleInputChange(e.target.value, field)}
+                />
+              )}
             </div>
           );
         })}
       </div>
-      <div className='flex items-center justify-end'>
-        <button
-          onClick={handleAddRow}
-          className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40"
-        >
+      <div className="flex items-center justify-end">
+        <button onClick={handleAddRow} className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40">
           {isEditing ? 'Save' : 'Add'}
         </button>
       </div>
@@ -153,10 +176,7 @@ export const Transport = ({  formData,data, setFormData, handleChange }) => {
                     >
                       Edit
                     </button>
-                    <button
-                      onClick={() => handleDeleteRow(rowIndex)}
-                      className="bg-red-500 text-white p-1 rounded"
-                    >
+                    <button onClick={() => handleDeleteRow(rowIndex)} className="bg-red-500 text-white p-1 rounded">
                       Delete
                     </button>
                   </td>
