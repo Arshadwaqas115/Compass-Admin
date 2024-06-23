@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -7,23 +7,40 @@ const NewModal = ({ show, onClose }) => {
     { title: 'Hotel Vendor', type: 'dropdown' },
     { title: 'Agent Name', type: 'dropdown' },
     { title: 'Transport Vendor', type: 'input' },
-    { title: 'File Number / Guest Name', type: 'input' },
+    { title: 'File Number', type: 'input' },
     { title: 'Date Range', type: 'date' },
     { title: 'Hotel Name', type: 'input' },
     { title: 'Staff Name', type: 'input' },
-    { title: 'Ref No.', type: 'input' },
+    { title: 'Ref No', type: 'input' },
   ];
 
   const [vendors, setVendors] = useState([]);
   const [agents, setAgents] = useState([]);
   const [filteredDocuments, setFilteredDocuments] = useState([]);
-  const [filteredDocumentsAgent, setFilteredDocumentsAgent] = useState([]);
-  const [filteredDocumentsTransport, setFilteredDocumentsTransport] = useState([]);
 
   useEffect(() => {
     getVendors();
     getAgents();
   }, []);
+
+  const debounce = (func, wait) => {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  };
+
+  const debounceOptionClicked = useCallback(
+    debounce((option, data) => {
+      filterAccordingToOption(option, data);
+    }, 500), // 500ms delay
+    []
+  );
+
+  const handleInputChange = (option, value) => {
+    debounceOptionClicked(option, value);
+  };
 
   const getVendors = async () => {
     try {
@@ -70,10 +87,34 @@ const NewModal = ({ show, onClose }) => {
             alert('Agent found!');
             results.push({ id: doc.id, ...doc.data() });
           }
-        } else if (option == 'transport') {
-          const hasAgent = doc.data().mainDetails?.agent == data;
-          if (hasAgent) {
-            alert('Agent found!');
+        } else if (option == 'Transport Vendor') {
+          const hasVendor = doc.data().transport?.some((transport) => transport.vendor == data);
+          if (hasVendor) {
+            alert('Vendor found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'File Number') {
+          const hasFile = doc.data().mainDetails?.fileNo == data;
+          if (hasFile) {
+            alert('File found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Hotel Name') {
+          const hasHotel = doc.data().accomodation?.some((accommodation) => accommodation.hotelname == data);
+          if (hasHotel) {
+            alert('Hotel found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Staff Name') {
+          const hasStaff = doc.data().services?.some((services) => services.staff == data);
+          if (hasStaff) {
+            alert('Staff found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Ref No') {
+          const hasRef = doc.data().accomodation?.some((accommodation) => accommodation.ref == data);
+          if (hasRef) {
+            alert('Ref found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         }
@@ -83,66 +124,6 @@ const NewModal = ({ show, onClose }) => {
       console.error('Error fetching data:', error);
     }
   };
-
-  //   const filterAccordingToVendor = async (vendorName) => {
-  //     try {
-  //       const dataCollection = collection(db, 'Data');
-  //       const querySnapshot = await getDocs(dataCollection);
-  //       const results = [];
-
-  //       querySnapshot.forEach((doc) => {
-  //         const hasVendor = doc.data().accomodation?.some((accommodation) => accommodation.vendor == vendorName);
-  //         if (hasVendor) {
-  //           alert('Vendor found!');
-  //           results.push({ id: doc.id, ...doc.data() });
-  //         }
-  //       });
-
-  //       setFilteredDocuments(results);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-
-  //   const filterAccordingToAgent = async (agentName) => {
-  //     try {
-  //       const dataCollection = collection(db, 'Data');
-  //       const querySnapshot = await getDocs(dataCollection);
-  //       const results = [];
-
-  //       querySnapshot.forEach((doc) => {
-  //         const hasAgent = doc.data().mainDetails?.agent == agentName;
-  //         if (hasAgent) {
-  //           alert('Agent found!');
-  //           results.push({ id: doc.id, ...doc.data() });
-  //         }
-  //       });
-
-  //       setFilteredDocumentsAgent(results);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-
-  //   const filterAccordingToTransport = async (agentName) => {
-  //     try {
-  //       const dataCollection = collection(db, 'Data');
-  //       const querySnapshot = await getDocs(dataCollection);
-  //       const results = [];
-
-  //       querySnapshot.forEach((doc) => {
-  //         const hasAgent = doc.data().mainDetails?.agent == agentName;
-  //         if (hasAgent) {
-  //           alert('Agent found!');
-  //           results.push({ id: doc.id, ...doc.data() });
-  //         }
-  //       });
-
-  //       setFilteredDocumentsAgent(results);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
 
   useEffect(() => {
     console.log('Vendors: ', vendors);
@@ -155,10 +136,6 @@ const NewModal = ({ show, onClose }) => {
   useEffect(() => {
     console.log('Filtered documents: ', filteredDocuments);
   }, [filteredDocuments]);
-
-  //   useEffect(() => {
-  //     console.log('Filtered documents agent: ', filteredDocumentsAgent);
-  //   }, [filteredDocumentsAgent]);
 
   useEffect(() => {
     if (show) {
@@ -194,7 +171,14 @@ const NewModal = ({ show, onClose }) => {
               <input type="checkbox" className="form-checkbox" />
               <label className="flex-grow">{item.title}</label>
               {item.type === 'input' ? (
-                <input type="text" className="border p-1 rounded w-1/3" placeholder="Input" />
+                <input
+                  type="text"
+                  className="border p-1 rounded w-1/3"
+                  placeholder="Input"
+                  onChange={(e) => {
+                    handleInputChange(item.title, e.target.value);
+                  }}
+                />
               ) : item.type === 'dropdown' ? (
                 item.title == 'Hotel Vendor' ? (
                   <select
