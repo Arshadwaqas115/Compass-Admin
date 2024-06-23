@@ -33,14 +33,13 @@ const NewModal = ({ show, onClose, filteredData }) => {
 
   const debounceOptionClicked = useCallback(
     debounce((option, data) => {
-      awaitfilterAccordingToOption(option, data);
+      filterAccordingToOption(option, data);
     }, 500), // 500ms delay
     []
   );
 
   const handleInputChange = (option, value) => {
     debounceOptionClicked(option, value);
-    filteredData(filteredDocuments);
   };
 
   const getVendors = async () => {
@@ -121,6 +120,7 @@ const NewModal = ({ show, onClose, filteredData }) => {
         }
       });
       setFilteredDocuments(results);
+      filteredData(results);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -155,7 +155,6 @@ const NewModal = ({ show, onClose, filteredData }) => {
 
   const optionClicked = async (option, data) => {
     await filterAccordingToOption(option, data);
-    filteredData(filteredDocuments);
   };
 
   return (
