@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
+import { Loading } from '@/components/custom/loading';
+
 const NewModal = ({ show, onClose, filteredData }) => {
   const dummyArray = [
     { title: 'Hotel Vendor', type: 'dropdown' },
@@ -17,6 +19,7 @@ const NewModal = ({ show, onClose, filteredData }) => {
   const [vendors, setVendors] = useState([]);
   const [agents, setAgents] = useState([]);
   const [filteredDocuments, setFilteredDocuments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getVendors();
@@ -34,7 +37,7 @@ const NewModal = ({ show, onClose, filteredData }) => {
   const debounceOptionClicked = useCallback(
     debounce((option, data) => {
       filterAccordingToOption(option, data);
-    }, 1000), // 500ms delay
+    }, 1000), // delay
     []
   );
 
@@ -70,6 +73,7 @@ const NewModal = ({ show, onClose, filteredData }) => {
 
   const filterAccordingToOption = async (option, data) => {
     try {
+      setLoading(true);
       const dataCollection = collection(db, 'Data');
       const querySnapshot = await getDocs(dataCollection);
       const results = [];
@@ -78,51 +82,53 @@ const NewModal = ({ show, onClose, filteredData }) => {
         if (option == 'vendor') {
           const hasVendor = doc.data().accomodation?.some((accommodation) => accommodation.vendor == data);
           if (hasVendor) {
-            alert('Vendor found!');
+            // alert('Vendor found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         } else if (option == 'agent') {
           const hasAgent = doc.data().mainDetails?.agent == data;
           if (hasAgent) {
-            alert('Agent found!');
+            // // alert('Agent found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         } else if (option == 'Transport Vendor') {
           const hasVendor = doc.data().transport?.some((transport) => transport.vendor == data);
           if (hasVendor) {
-            alert('Vendor found!');
+            // alert('Vendor found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         } else if (option == 'File Number') {
           const hasFile = doc.data().mainDetails?.fileNo == data;
           if (hasFile) {
-            alert('File found!');
+            // alert('File found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         } else if (option == 'Hotel Name') {
           const hasHotel = doc.data().accomodation?.some((accommodation) => accommodation.hotelname == data);
           if (hasHotel) {
-            alert('Hotel found!');
+            // alert('Hotel found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         } else if (option == 'Staff Name') {
           const hasStaff = doc.data().services?.some((services) => services.staff == data);
           if (hasStaff) {
-            alert('Staff found!');
+            // alert('Staff found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         } else if (option == 'Ref No') {
           const hasRef = doc.data().accomodation?.some((accommodation) => accommodation.ref == data);
           if (hasRef) {
-            alert('Ref found!');
+            // alert('Ref found!');
             results.push({ id: doc.id, ...doc.data() });
           }
         }
       });
       setFilteredDocuments(results);
       filteredData(results);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setLoading(false);
     }
   };
 
@@ -149,13 +155,17 @@ const NewModal = ({ show, onClose, filteredData }) => {
   if (!show) return null;
 
   const handleSubmitClick = () => {
-    alert('Clicked');
+    // alert('Clicked');
     document.body.style.overflow = 'unset';
   };
 
   const optionClicked = async (option, data) => {
     await filterAccordingToOption(option, data);
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

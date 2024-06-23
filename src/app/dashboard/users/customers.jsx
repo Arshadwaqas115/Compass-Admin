@@ -47,7 +47,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   useEffect(() => {
     getUsersData();
   }, []);
-  
+
   useEffect(() => {
     console.log('Users: ', users);
     const userResults = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -61,13 +61,14 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   const noResultsMessage = 'No results to display.';
 
   const receivedFilteredData = (data) => {
-    alert('Parent called!');
+    // alert('Parent called!');
     setDataFromChild(data);
-    const updatedUsers = data.map(item => ({
+    const updatedUsers = data.map((item) => ({
       id: item.id,
-      name: item.mainDetails.guestName
+      name: item.mainDetails.guestName,
     }));
     setFilteredUsers(updatedUsers);
+    setShowModal(false);
   };
 
   return (
