@@ -3,13 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCbKII-58eBE_4voeZ84x-QTy3BFneyfT0",
-  authDomain: "compass-dc245.firebaseapp.com",
-  projectId: "compass-dc245",
-  storageBucket: "compass-dc245.appspot.com",
-  messagingSenderId: "510532264460",
-  appId: "1:510532264460:web:d410840da967241bb4c429",
-  measurementId: "G-4QKTY1Q0VV"
+  apiKey: "AIzaSyB1WroDsrmwkZKQxDyI--NXeUmefone1_I",
+  authDomain: "compass-442c5.firebaseapp.com",
+  projectId: "compass-442c5",
+  storageBucket: "compass-442c5.appspot.com",
+  messagingSenderId: "294947124366",
+  appId: "1:294947124366:web:4a9ccd16115474201ac5df",
+  measurementId: "G-00JQZ5F55G"
 };
 
 const app = initializeApp(firebaseConfig);
