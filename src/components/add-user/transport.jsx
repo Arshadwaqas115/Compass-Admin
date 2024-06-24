@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { sectorOptions, vehicleOptions } from '@/extra/data';
 import Select from 'react-select';
 
-export const Transport = ({ formData, data, setFormData, handleChange }) => {
+export const Transport = ({ formData, data, setFormData, handleChange,transportVendorOptions,mainDetails }) => {
   const headers = [
+    'File No',
+    'Guest Name',
     'Vehicle',
     'Ref',
     'Date',
@@ -18,6 +20,8 @@ export const Transport = ({ formData, data, setFormData, handleChange }) => {
   ];
 
   const [rowData, setRowData] = useState({
+        fileno: mainDetails.fileNo,
+    guestname: mainDetails.guestName,
     vehicle: '',
     ref: '',
     date: '',
@@ -33,7 +37,7 @@ export const Transport = ({ formData, data, setFormData, handleChange }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  console.log(rowData);
+ 
 
   const handleInputChange = (value, field) => {
     if (field === 'r/a') {
@@ -98,6 +102,7 @@ export const Transport = ({ formData, data, setFormData, handleChange }) => {
     const updatedTransport = data.filter((item, i) => i !== index);
     setFormData({ ...formData, transport: updatedTransport });
   };
+    
 
   return (
     <div>
@@ -105,12 +110,22 @@ export const Transport = ({ formData, data, setFormData, handleChange }) => {
         <h1>Step 3: Transport</h1>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {headers.map((header, index) => {
+        {headers.filter((header) => header !== 'File No' && header !== 'Guest Name')
+          .map((header, index) => {
           const field = header.toLowerCase().replace(/ /g, '');
           return (
             <div key={index} className="flex flex-col gap-2">
               <label className="font-semibold">{header}</label>
-              {header === 'Vehicle' ? (
+              {
+              header === 'Vendor' ? (
+                <Select
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={transportVendorOptions.find((option) => option.value === rowData[field])}
+                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  options={transportVendorOptions}
+                />
+              ) :header === 'Vehicle' ? (
                 <Select
                   placeholder={header}
                   className="p-2 rounded-lg"

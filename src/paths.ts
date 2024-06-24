@@ -3,9 +3,10 @@ export const paths = {
   auth: { signIn: '/auth/sign-in', signUp: '/auth/sign-up', resetPassword: '/auth/reset-password' },
   dashboard: {
     agents:'/dashboard/agents',
-    vendors:'/dashboard/vendors',
+    vendors:'/dashboard/hotelVendors',
     detail : '/dashboard/add-user',
     user_agent_list: '/dashboard/users',
+    tranportVendors: '/dashboard/transportVendors'
     // overview: '/dashboard'
   },
   errors: { notFound: '/errors/not-found' },

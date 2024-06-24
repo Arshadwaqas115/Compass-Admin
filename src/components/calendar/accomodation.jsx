@@ -76,19 +76,22 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
 Voucher.displayName = 'Voucher';
 
 export const Accomodation = ({ data, customer, type }) => {
+
+ 
   const customerHeaders = [
+    'File No',
+    'Guest Name',
     'City',
     'Ref',
-    'Vendor',
-    'File No',
     'Hotel Name',
     'HCN',
     'Room Type',
     'Meals',
-    'Quantity',
+    'Rooms Quantity',
     'Check Inn',
     'Check Out',
     'Nights',
+    'Vendor',
     'Selling',
     'Purchase',
     'Print',
@@ -102,7 +105,25 @@ export const Accomodation = ({ data, customer, type }) => {
     'HCN',
     'Room Type',
     'Meals',
-    'Quantity',
+    'Rooms Quantity',
+    'Check Inn',
+    'Check Out',
+    'Nights',
+    'Vendor',
+    'Selling',
+    'Purchase',
+    'Print',
+  ];
+  const vendorHeaders = [
+    'File No',
+    'Guest Name',
+    'City',
+    'Ref',
+    'Hotel Name',
+    'HCN',
+    'Room Type',
+    'Meals',
+    'Rooms Quantity',
     'Check Inn',
     'Check Out',
     'Nights',
@@ -114,7 +135,11 @@ export const Accomodation = ({ data, customer, type }) => {
   const getHeaders = () => {
     if (type === 'Agent') {
       return agentHeaders;
-    } else {
+    }
+    if (type === 'Vendor'){
+      return vendorHeaders
+    }
+    else {
       return customerHeaders;
     }
   };
@@ -129,7 +154,7 @@ export const Accomodation = ({ data, customer, type }) => {
       checkInn: row.checkinn,
       checkOut: row.checkout,
       hotelName: row.hotelname,
-      guestName: customer.guestName,
+      guestName: row.guestname,
       nights: row.nights,
       quantity: row.quantity,
       roomType: row.roomtype,

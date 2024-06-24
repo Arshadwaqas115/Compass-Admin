@@ -15,7 +15,7 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
   const getUsersData = async () => {
     setLoading(true);
     try {
-      const userQuerySnapshot = await getDocs(collection(db, 'Vendors'));
+      const userQuerySnapshot = await getDocs(collection(db, 'TransportVendors'));
       let usersTemp = [];
       userQuerySnapshot.forEach((doc) => {
         usersTemp.push({ id: doc.id, ...doc.data() });
@@ -36,7 +36,7 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
 
   useEffect(() => {
     console.log('Vendors: ', users);
-    const userResults = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const userResults = users.filter((user) => user?.name?.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredUsers(userResults);
   }, [searchTerm, users]);
 

@@ -6,11 +6,16 @@ import { Loading } from '@/components/custom/loading';
 
 import { Card } from '../../../components/custom/usercard';
 import NewModal from '../../../components/modal/modal';
-
+import FilteredDataModal from  './FilteredDataModal'
 export const Customers = ({ setPath, setDocId, setType }) => {
   const [showModal, setShowModal] = useState(false);
   const [dataFromChild, setDataFromChild] = useState('');
+  const [graphView,setGraphView] = useState(false);
+  const [showFilteredDataModal, setShowFilteredDataModal] = useState(false);
 
+  const handleFilteredDataClose = () => {
+    setShowFilteredDataModal(false);
+  };
   const handleSearchClick = () => {
     setShowModal(true);
   };
@@ -23,7 +28,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-
+ 
   const getUsersData = async () => {
     setLoading(true);
     try {
@@ -49,7 +54,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   }, []);
   
   useEffect(() => {
-    console.log('Users: ', users);
+   
     const userResults = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredUsers(userResults);
   }, [searchTerm, users]);
@@ -61,7 +66,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   const noResultsMessage = 'No results to display.';
 
   const receivedFilteredData = (data) => {
-    alert('Parent called!');
+   
     setDataFromChild(data);
     const updatedUsers = data.map(item => ({
       id: item.id,
@@ -70,12 +75,15 @@ export const Customers = ({ setPath, setDocId, setType }) => {
     setFilteredUsers(updatedUsers);
   };
 
+  
   return (
     <div className="p-4">
-      <NewModal show={showModal} onClose={handleClose} filteredData={receivedFilteredData} />
+      <NewModal show={showModal} onClose={handleClose} filteredData={receivedFilteredData}  setGraphView={setGraphView}/>
+      <FilteredDataModal show={showFilteredDataModal} data={dataFromChild} onClose={handleFilteredDataClose}  />
       <div className="flex items-center justify-between border-b mb-4">
-        <h1 className="text-xl p-4">Users</h1>
+        <h1 className="text-xl p-4">Guests</h1>
         <div className="flex items-center space-x-2">
+          {graphView && <h1 onClick={()=>{setShowFilteredDataModal(true)}}className='font-bolder text-md mr-4 border px-4 py-2 hover:text-green-400  cursor-pointer rounded-xl'>Show Chart</h1>}
           <svg
             width="24px"
             height="24px"
@@ -161,11 +169,12 @@ export const Customers = ({ setPath, setDocId, setType }) => {
           </svg>
           <input
             type="text"
-            placeholder="Search by username"
+            placeholder="Search by guest name"
             className="p-2 placeholder:text-center border border-gray-300 rounded"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          
           <button
             onClick={() => {
               setPath('add');

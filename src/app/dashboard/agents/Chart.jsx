@@ -28,24 +28,24 @@ const Chart = ({ setPath, docId, type }) => {
       const docSnap = await getDoc(docRef);
       let temp = docSnap.data();
 
-      if (type === "Agent") {
+      // if (type === "Agent") {
       
-        const mainDetails = temp.mainDetails || {};
-        const guestname = mainDetails.guestName || "";
-        const fileno = mainDetails.fileNo || "";
+      //   const mainDetails = temp.mainDetails || {};
+      //   const guestname = mainDetails.guestName || "";
+      //   const fileno = mainDetails.fileNo || "";
 
-        temp.accomodation = temp.accomodation.map(item => ({
-          ...item,
-          guestname,
-          fileno
-        }));
+      //   temp.accomodation = temp.accomodation.map(item => ({
+      //     ...item,
+      //     guestname,
+      //     fileno
+      //   }));
 
-        temp.transport = temp.transport.map(item => ({
-          ...item,
-          guestname,
-          fileno
-        }));
-      }
+      //   temp.transport = temp.transport.map(item => ({
+      //     ...item,
+      //     guestname,
+      //     fileno
+      //   }));
+      // }
 
       setData(temp);
       setLoading(false);

@@ -14,61 +14,48 @@ const Chart = ({ setPath, docId, type }) => {
   const [data, setData] = useState({});
   const [step, setStep] = useState(0);
 
-
+  
   const getData = async () => {
     setLoading(true);
     try {
-      let docRef;
-      if (type === "User") {
-        docRef = doc(db, "Data", docId);
-      } else if (type === "Agent") {
-        docRef = doc(db, "Agents", docId);
-      }
-
+   
+      const docRef = doc(db, "Vendors", docId);  
       const docSnap = await getDoc(docRef);
-      let temp = docSnap.data();
 
-      if (type === "Agent") {
-      
-        const mainDetails = temp.mainDetails || {};
-        const guestname = mainDetails.guestName || "";
-        const fileno = mainDetails.fileNo || "";
-
-        temp.accomodation = temp.accomodation.map(item => ({
-          ...item,
-          guestname,
-          fileno
-        }));
-
-        temp.transport = temp.transport.map(item => ({
-          ...item,
-          guestname,
-          fileno
-        }));
+      if (docSnap.exists()) {
+        const temp = docSnap.data();
+        console.log("Document data:", temp);
+        setData(temp);
+      } else {
+        console.log("No such document!");
       }
-
-      setData(temp);
-      setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching document:", error);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getData();
+    if (docId) {
+      getData();
+    }
   }, []);
 
+
+
+
+ 
   const steps = [
     { name: 'Main details', component: <Maindetails data={data?.mainDetails} /> },
-    { name: 'Accomodation', component: <Accomodation data={data?.accomodation} customer={data?.mainDetails} type={type} /> },
+    { name: 'Accomodation', component: <Accomodation data={data?.accommodation} customer={data?.mainDetails} type={type} /> },
     { name: 'Transport', component: <Transport data={data?.transport} customer={data?.mainDetails} type={type} /> },
     { name: 'Services', component: <Services data={data?.services} /> },
     { name: 'Office Invoice', component: <OfficeInvoice data={data?.officeInvoice} /> },
   ];
 
 
-  const filteredSteps = type === "Vendor" ? steps.filter(step => step.name === 'Accomodation' || step.name === 'Transport') : steps;
+  const filteredSteps = type === "Vendor" ? steps.filter(step => step.name === 'Accomodation' ) : steps;
 
   if (loading) {
     return <Loading />;
@@ -81,6 +68,11 @@ const Chart = ({ setPath, docId, type }) => {
           <div>
             <Avatar />
           </div>
+          {type === "Vendor" && (
+             <div className="text-xl">
+                  {data?.name}
+               </div>
+          )} 
           {type === "Agent" && ( <div className="text-xl">
             {data?.name}
           </div>)}

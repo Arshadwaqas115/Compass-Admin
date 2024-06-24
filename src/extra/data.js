@@ -19,7 +19,7 @@ export const vehicleOptions = ['car', 'hiace', 'coaster'].map((item) => {
   };
 });
 
-export const sectorOptions = ['airlines', 'road', 'rail'].map((item) => {
+export const sectorOptions = ['Zyarat Mak', 'Zyarat Mad', 'Zyarat Both'].map((item) => {
   return {
     value: item,
     label: item,

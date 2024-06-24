@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => {
   const headers = [
@@ -8,7 +8,7 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
   const [rowData, setRowData] = useState({
     totalpa: '',
     totalra: '',
-    roe: '',
+    roe: 74,
     pkrpa: '',
     pkrra: '',
   });
@@ -16,8 +16,40 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
+
+  const calculation = () =>{
+    const mainDetailRa = formData.mainDetails.ra
+    const mainDetailPa = formData.mainDetails.pa
+    let totalRA = 0;
+    let totalPA = 0;
+  
+    for (const row of formData.transport) {
+      console.log(row)
+      totalRA += parseFloat(row.ra);
+      totalPA += parseFloat(row.pa);
+    }
+    totalPA += parseFloat(mainDetailPa)
+    totalRA += parseFloat(mainDetailRa)
+
+    setRowData({...rowData,totalpa:totalPA,totalra:totalRA,pkrpa:rowData.roe * totalPA ,pkrra: rowData.roe * totalRA  })
+  }
+ 
+  useEffect(()=>{
+    calculation()
+  },[])
+
+
   const handleInputChange = (e, field) => {
+   
+
+   
     const value = e.target.value;
+    if (['totalpa', 'totalra', 'roe', 'pkrpa', 'pkrra'].includes(field)) {
+      if (!/^\d*$/.test(value)) {
+        alert(`${field.charAt(0).toUpperCase() + field.slice(1)} must be a number`);
+        return;
+      }
+    }
     setRowData({ ...rowData, [field]: value });
   };
 

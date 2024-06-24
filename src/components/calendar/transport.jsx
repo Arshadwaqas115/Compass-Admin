@@ -65,13 +65,15 @@ export const Transport = ({ data, customer ,type }) => {
 
    const getHeaders = () =>{
      if(type === "Agent"){
-       const AgentHeaders = [ 'File No','Guest Name','Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Booked', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print']
+       const AgentHeaders = [ 'File No','Guest Name','Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Flight Details', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print']
        return AgentHeaders
      }
+     if(type === "Vendor"){
+      const vendorHeaders = [ 'File No','Guest Name','Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Flight Details', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print']
+      return vendorHeaders
+    }
      else{
-      const main = [
-        'Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Booked', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print'
-      ];
+      const main = [ 'File No','Guest Name','Vehicle', 'Ref', 'Date', 'Sector', 'Vendor', 'Flight Details', 'R/A', 'P/A', 'Remarks', 'Pick Point', 'Drop Point', 'Print']
         return main
      }
    }

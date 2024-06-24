@@ -3,13 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB1WroDsrmwkZKQxDyI--NXeUmefone1_I",
-  authDomain: "compass-442c5.firebaseapp.com",
-  projectId: "compass-442c5",
-  storageBucket: "compass-442c5.appspot.com",
-  messagingSenderId: "294947124366",
-  appId: "1:294947124366:web:4a9ccd16115474201ac5df",
-  measurementId: "G-00JQZ5F55G"
+  apiKey: "AIzaSyCyWus7J1DFTmEWZOxO9LxanClZLE8VCWk",
+  authDomain: "crm-project-22c8b.firebaseapp.com",
+  projectId: "crm-project-22c8b",
+  storageBucket: "crm-project-22c8b.appspot.com",
+  messagingSenderId: "242026830824",
+  appId: "1:242026830824:web:93325a2023a9cf7065625d",
+  measurementId: "G-PST38YRZJ3"
 };
 
 const app = initializeApp(firebaseConfig);

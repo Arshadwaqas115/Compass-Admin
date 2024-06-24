@@ -1,19 +1,19 @@
 "use client";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState, useEffect } from "react";
-import { MultiSelect } from "react-multi-select-component";
+import Select from 'react-select';
 
-export const Maindetails = ({ data, handleChange, agentOptions }) => {
-  const [selected, setSelected] = useState([]);
+export const Maindetails = ({ data, handleChange, agentOptions, errors }) => {
+  const [selected, setSelected] = useState(null);
 
   const handleSelectChange = (selectedOption) => {
-    setSelected(selectedOption.length > 0 ? [selectedOption[0]] : []);
+    setSelected(selectedOption);
   };
 
   useEffect(() => {
-    if (selected.length > 0) {
-      handleChange("mainDetails", "agent", selected[0].label); 
-      handleChange("mainDetails", "agentId", selected[0].id);
+    if (selected) {
+      handleChange("mainDetails", "agent", selected.label); 
+      handleChange("mainDetails", "agentId", selected.id);
     } else {
       handleChange("mainDetails", "agent", "");
       handleChange("mainDetails", "agentId", "");
@@ -39,6 +39,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(e) => handleChange("mainDetails", "fileNo", e.target.value)}
             />
           </div>
+          {errors?.fileNo && <p className="text-red-500">{errors.fileNo}</p>}
         </div>
         <div>
           <div>
@@ -50,20 +51,21 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(date) => handleChange("mainDetails", "date", date)}
             />
           </div>
+          {errors?.date && <p className="text-red-500">{errors.date}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
             <h1 className="font-semibold">Agent</h1>
           </div>
           <div>
-              <MultiSelect
+            <Select
               options={agentOptions}
               value={selected}
               onChange={handleSelectChange}
-              labelledBy="Select"
-              hasSelectAll={false}
+              isClearable
             />
           </div>
+          {errors?.agent && <p className="text-red-500">{errors.agent}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
@@ -78,6 +80,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(e) => handleChange("mainDetails", "guestName", e.target.value)}
             />
           </div>
+          {errors?.guestName && <p className="text-red-500">{errors.guestName}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
@@ -92,6 +95,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(e) => handleChange("mainDetails", "details", e.target.value)}
             />
           </div>
+          {errors?.details && <p className="text-red-500">{errors.details}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
@@ -106,6 +110,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(e) => handleChange("mainDetails", "visaCompany", e.target.value)}
             />
           </div>
+          {errors?.visaCompany && <p className="text-red-500">{errors.visaCompany}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
@@ -120,6 +125,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(e) => handleChange("mainDetails", "pa", e.target.value)}
             />
           </div>
+          {errors?.pa && <p className="text-red-500">{errors.pa}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
@@ -134,6 +140,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
               onChange={(e) => handleChange("mainDetails", "ra", e.target.value)}
             />
           </div>
+          {errors?.ra && <p className="text-red-500">{errors.ra}</p>}
         </div>
         <div className="flex flex-col gap-2">
           <div>
@@ -165,6 +172,7 @@ export const Maindetails = ({ data, handleChange, agentOptions }) => {
                 onChange={(e) => handleChange("mainDetails", "visaCount", e.target.value)}
               />
             </div>
+            {errors?.visaCount && <p className="text-red-500">{errors.visaCount}</p>}
           </div>
         )}
       </div>
