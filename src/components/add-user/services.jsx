@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { serviceOptions, staffOptions } from '@/extra/data';
 import Select from 'react-select';
-
+import CreatableSelect from 'react-select/creatable'
 export const Services = ({ formData, setFormData, data, handleChange }) => {
   const headers = ['Service', 'Charges', 'Staff'];
 
@@ -67,7 +67,7 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
             <div key={index} className="flex flex-col gap-2">
               <label className="font-semibold">{header}</label>
               {header === 'Service' ? (
-                <Select
+                <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
                   value={serviceOptions.find((option) => option.value === rowData[field])}
@@ -75,7 +75,7 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
                   options={serviceOptions}
                 />
               ) : header === 'Staff' ? (
-                <Select
+                <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
                   value={staffOptions.find((option) => option.value === rowData[field])}

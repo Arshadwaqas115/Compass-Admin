@@ -29,6 +29,7 @@ class AuthClient {
   async signUp(params: SignUpParams): Promise<{ error?: string }> {
     const { email, password } = params;
     try {
+      
       const { user } = await createUserWithEmailAndPassword(auth as Auth, email, password);
       const token = await user.getIdToken();
       localStorage.setItem('custom-auth-token', token);

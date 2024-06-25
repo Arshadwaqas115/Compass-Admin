@@ -19,6 +19,8 @@ export interface UserProviderProps {
 }
 
 export function UserProvider({ children }: UserProviderProps): React.JSX.Element {
+
+    
   const [state, setState] = React.useState<{ user: User | null; error: string | null; isLoading: boolean }>({
     user: null,
     error: null,
@@ -45,9 +47,9 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
   React.useEffect(() => {
     checkSession().catch((err) => {
       logger.error(err);
-      // noop
+   
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Expected
+
   }, []);
 
   return <UserContext.Provider value={{ ...state, checkSession }}>{children}</UserContext.Provider>;

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { sectorOptions, vehicleOptions } from '@/extra/data';
 import Select from 'react-select';
-
+import {SharedModal} from "../../components/modal/sharedmodal"; 
+import CreatableSelect from 'react-select/creatable'
 export const Transport = ({ formData, data, setFormData, handleChange,transportVendorOptions,mainDetails }) => {
+  const [showVendorModal, setShowVendorModal] = useState(false);
   const headers = [
     'File No',
     'Guest Name',
@@ -102,7 +104,14 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
     const updatedTransport = data.filter((item, i) => i !== index);
     setFormData({ ...formData, transport: updatedTransport });
   };
-    
+  const openVendorModal = () => {
+    setShowVendorModal(true);
+  };
+
+  const closeVendorModal = () => {
+    setShowVendorModal(false);
+  };
+  
 
   return (
     <div>
@@ -118,15 +127,25 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
               <label className="font-semibold">{header}</label>
               {
               header === 'Vendor' ? (
-                <Select
-                  placeholder={header}
-                  className="p-2 rounded-lg"
-                  value={transportVendorOptions.find((option) => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                  options={transportVendorOptions}
-                />
+                <div  className="flex items-center">
+                  <div className='flex-grow'>
+                  <Select
+                    placeholder={header}
+                    className="p-2 rounded-lg"
+                    value={transportVendorOptions.find((option) => option.value === rowData[field])}
+                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    options={transportVendorOptions}
+                  />
+                  </div>
+                  <button
+                                      onClick={openVendorModal}
+                                      className="ml-2 bg-green-500 text-white p-2 rounded-full"
+                                    >
+                                      +
+                    </button>
+                </div>
               ) :header === 'Vehicle' ? (
-                <Select
+                <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
                   value={vehicleOptions.find((option) => option.value === rowData[field])}
@@ -134,7 +153,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                   options={vehicleOptions}
                 />
               ) : header === 'Sector' ? (
-                <Select
+                <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
                   value={sectorOptions.find((option) => option.value === rowData[field])}
@@ -207,6 +226,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
           </tbody>
         </table>
       </div>
+      {showVendorModal && <SharedModal onClose={closeVendorModal} type="transport" />}
     </div>
   );
 };

@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 
 import { hotelOptions, mealOptions, roomOptions } from '../../extra/data';
-
+import {SharedModal} from "../../components/modal/sharedmodal";
+import CreatableSelect from 'react-select/creatable'
 const headers = [
   'File No',
   'Guest Name',
@@ -44,7 +45,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
+  const [showVendorModal, setShowVendorModal] = useState(false);
   useEffect(() => {
     if (rowData.checkinn && rowData.checkout) {
       const nights = calculateNights(rowData.checkinn, rowData.checkout);
@@ -126,6 +127,15 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     setFormData({ ...formData, accomodation: updatedAccommodation });
   };
 
+  const openVendorModal = () => {
+    setShowVendorModal(true);
+  };
+
+  const closeVendorModal = () => {
+    setShowVendorModal(false);
+  };
+  
+
   return (
     <div>
       <div className="mb-8 text-xl">
@@ -140,7 +150,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
               <div key={index} className="flex flex-col gap-2">
                 <label className="font-semibold">{header}</label>
                 {header === 'Room Type' ? (
-                  <Select
+                  <CreatableSelect
                     placeholder={header}
                     className="p-2 rounded-lg"
                     value={roomOptions.find((option) => option.value === rowData[field])}
@@ -148,23 +158,37 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     options={roomOptions}
                   />
                 ) : header === 'Hotel Name' ? (
-                  <Select
+                  <CreatableSelect
                     placeholder={header}
                     className="p-2 rounded-lg"
                     value={hotelOptions.find((option) => option.value === rowData[field])}
                     onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
                     options={hotelOptions}
+                  
                   />
                 ) : header === 'Vendor' ? (
-                  <Select
-                    placeholder={header}
-                    className="p-2 rounded-lg"
-                    value={vendorOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                    options={vendorOptions}
-                  />
+                              <div className="flex items-center">
+                                  <Select
+                                    placeholder={header}
+                                    className="p-2 rounded-lg flex-1"
+                                    value={vendorOptions.find((option) => option.value === rowData[field])}
+                                    onChange={(selectedOption) => {
+                                      handleInputChange(selectedOption.value, field);
+                                     
+                                    }}
+                                    options={vendorOptions}
+                                  />
+                              
+                                    <button
+                                      onClick={openVendorModal}
+                                      className="ml-2 bg-green-500 text-white p-2 rounded-full"
+                                    >
+                                      +
+                                    </button>
+                          
+                                </div>
                 ) : header === 'Meals' ? (
-                  <Select
+                  <CreatableSelect
                     placeholder={header}
                     className="p-2 rounded-lg"
                     value={mealOptions.find((option) => option.value === rowData[field])}
@@ -245,6 +269,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
           </tbody>
         </table>
       </div>
+      {showVendorModal && <SharedModal onClose={closeVendorModal} type="hotel" />}
     </div>
   );
 };

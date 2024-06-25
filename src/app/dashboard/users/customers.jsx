@@ -83,7 +83,16 @@ export const Customers = ({ setPath, setDocId, setType }) => {
       <div className="flex items-center justify-between border-b mb-4">
         <h1 className="text-xl p-4">Guests</h1>
         <div className="flex items-center space-x-2">
-          {graphView && <h1 onClick={()=>{setShowFilteredDataModal(true)}}className='font-bolder text-md mr-4 border px-4 py-2 hover:text-green-400  cursor-pointer rounded-xl'>Show Chart</h1>}
+          {graphView && filteredUsers.length > 0 && (
+              <h1
+                onClick={() => {
+                  setShowFilteredDataModal(true);
+                }}
+                className="font-bolder text-md mr-4 border px-4 py-2 hover:text-green-400 cursor-pointer rounded-xl"
+              >
+                Show Chart
+              </h1>
+            )}
           <svg
             width="24px"
             height="24px"
