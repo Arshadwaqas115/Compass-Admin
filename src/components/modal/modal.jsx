@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
+import { Loading } from '@/components/custom/loading';
+
+const NewModal = ({ show, onClose, filteredData }) => {
   const dummyArray = [
     { title: 'Hotel Vendor', type: 'dropdown' },
     { title: 'Agent Name', type: 'dropdown' },
@@ -20,6 +22,7 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [checkedOptions, setCheckedOptions] = useState({});
   const [filteredDocuments, setFilteredDocuments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
   
@@ -28,6 +31,28 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
     getTransportVendors();
   }, []);
 
+<<<<<<< HEAD
+=======
+  const debounce = (func, wait) => {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  };
+
+  const debounceOptionClicked = useCallback(
+    debounce((option, data) => {
+      filterAccordingToOption(option, data);
+    }, 1000), // delay
+    []
+  );
+
+  const handleInputChange = (option, value) => {
+    debounceOptionClicked(option, value);
+  };
+
+>>>>>>> d6ecc5513c83e927c4a1dea1c4968239bb08dae8
   const getVendors = async () => {
     try {
       const userQuerySnapshot = await getDocs(collection(db, 'Vendors'));
@@ -84,6 +109,7 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
 
   const filterAccordingToOption = async (selectedOptions) => {
     try {
+      setLoading(true);
       const dataCollection = collection(db, 'Data');
       const querySnapshot = await getDocs(dataCollection);
 
@@ -96,6 +122,7 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
       };
 
       querySnapshot.forEach((doc) => {
+<<<<<<< HEAD
         let match = true;
 
         for (const option in selectedOptions) {
@@ -155,6 +182,49 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
               match = false;
               break;
             }
+=======
+        if (option == 'vendor') {
+          const hasVendor = doc.data().accomodation?.some((accommodation) => accommodation.vendor == data);
+          if (hasVendor) {
+            // alert('Vendor found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'agent') {
+          const hasAgent = doc.data().mainDetails?.agent == data;
+          if (hasAgent) {
+            // // alert('Agent found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Transport Vendor') {
+          const hasVendor = doc.data().transport?.some((transport) => transport.vendor == data);
+          if (hasVendor) {
+            // alert('Vendor found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'File Number') {
+          const hasFile = doc.data().mainDetails?.fileNo == data;
+          if (hasFile) {
+            // alert('File found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Hotel Name') {
+          const hasHotel = doc.data().accomodation?.some((accommodation) => accommodation.hotelname == data);
+          if (hasHotel) {
+            // alert('Hotel found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Staff Name') {
+          const hasStaff = doc.data().services?.some((services) => services.staff == data);
+          if (hasStaff) {
+            // alert('Staff found!');
+            results.push({ id: doc.id, ...doc.data() });
+          }
+        } else if (option == 'Ref No') {
+          const hasRef = doc.data().accomodation?.some((accommodation) => accommodation.ref == data);
+          if (hasRef) {
+            // alert('Ref found!');
+            results.push({ id: doc.id, ...doc.data() });
+>>>>>>> d6ecc5513c83e927c4a1dea1c4968239bb08dae8
           }
         }
 
@@ -165,8 +235,10 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
 
       setFilteredDocuments(results);
       filteredData(results);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setLoading(false);
     }
   };
 
@@ -194,8 +266,24 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
 
   if (!show) return null;
 
+<<<<<<< HEAD
 
   console.log(selectedOptions);
+=======
+  const handleSubmitClick = () => {
+    // alert('Clicked');
+    document.body.style.overflow = 'unset';
+  };
+
+  const optionClicked = async (option, data) => {
+    await filterAccordingToOption(option, data);
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
+
+>>>>>>> d6ecc5513c83e927c4a1dea1c4968239bb08dae8
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-4 rounded shadow-lg w-1/3">
