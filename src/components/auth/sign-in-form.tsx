@@ -20,21 +20,25 @@ import { z as zod } from 'zod';
 import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
 import { paths } from '@/paths';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '@/firebase/firebase';
+import { AppContext } from '@/contexts/userContext';
 
 const schema = zod.object({
-  email: zod.string().min(1, { message: 'Email is required' }).email(),
+  name: zod.string().min(1, { message: 'name is required' }),
   password: zod.string().min(1, { message: 'Password is required' }),
 });
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: 'abc@compass.com', password: 'Secret1' } satisfies Values;
+const defaultValues = { name: 'Test', password: 'test1234' } satisfies Values;
 
 export function SignInForm(): React.JSX.Element {
   const router = useRouter();
   const { checkSession } = useUser();
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [isPending, setIsPending] = React.useState<boolean>(false);
+  const {setUser} = React.useContext(AppContext)
 
   const {
     control,
@@ -48,45 +52,56 @@ export function SignInForm(): React.JSX.Element {
       setIsPending(true);
 
       try {
-        const { error } = await authClient.signInWithPassword(values);
-
-        if (error) {
-          setError('root', { type: 'server', message: error });
-          setIsPending(false);
-          return;
+      
+        console.log(values.name)
+        const q = query(
+          collection(db, 'employees'),
+          where('name', '==', values.name),
+          where('password', '==', values.password)
+        );
+        const querySnapshot = await getDocs(q);
+  
+        if (!querySnapshot.empty) {
+          
+          const user = querySnapshot.docs[0].data();
+          localStorage.setItem('user', JSON.stringify(user));
+          setUser(user)
+         
+          router.replace(paths.dashboard.agents);
+        } else {
+          setError('root', { type: 'server', message: 'Invalid name or password' });
         }
       } catch (error: any) {
         setError('root', { type: 'server', message: error.message });
-        setIsPending(false);
       } finally {
-        await checkSession?.();
-        router.replace(paths.dashboard.agents);
+        setIsPending(false);
       }
     },
-    [checkSession, router, setError]
+    [router, setError]
   );
+  
 
   return (
     <Stack spacing={4}>
       <Stack spacing={1}>
         <Typography variant="h4">Sign in</Typography>
         <Typography color="text.secondary" variant="body2">
-          Don&apos;t have an account?{' '}
-          <Link component={RouterLink} href={paths.auth.signUp} underline="hover" variant="subtitle2">
+          {/* Don&apos;t have an account?{' '} */}
+          {/* <Link component={RouterLink} href={paths.auth.signUp} underline="hover" variant="subtitle2">
             Sign up
-          </Link>
+          </Link> */}
         </Typography>
       </Stack>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Controller
             control={control}
-            name="email"
+            name="name"
             render={({ field }) => (
-              <FormControl error={Boolean(errors.email)}>
-                <InputLabel>Email address</InputLabel>
-                <OutlinedInput {...field} label="Email address" type="email" />
-                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+              <FormControl error={Boolean(errors.name)}>
+                <InputLabel>User Name</InputLabel>
+                <OutlinedInput {...field} label="Enter your name" type="text" />
+                {errors.name ? <FormHelperText>{errors.name.message}</FormHelperText> : null}
               </FormControl>
             )}
           />

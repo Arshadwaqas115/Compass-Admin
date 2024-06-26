@@ -3,6 +3,7 @@ import { Gantt } from 'gantt-task-react';
 import "gantt-task-react/dist/index.css";
 
 const FilteredDataModal = ({ show, onClose, data }) => {
+  
 
   const [transformedData, setTransformedData] = useState([]);
 
@@ -39,34 +40,26 @@ const FilteredDataModal = ({ show, onClose, data }) => {
 
 
   useState(() => {
-    let transformed
-    if(data){
-      transformed = data?.map((guest) => transformAccommodationEntries(guest));
-    }
-     
+    const transformed = data?.map((guest) => transformAccommodationEntries(guest));
     setTransformedData(transformed);
   }, [data]);
 
-  return 
-  {
-    show &&
-    <>
-      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40">
-        <div className="bg-white p-4 rounded shadow-lg  lg:w-1/2 h-full overflow-y-auto overflow-x-auto">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl">Filtered Data</h2>
-            <button onClick={onClose} className="text-black">
-              &times;
-            </button>
-          </div>
-          <div>
-            {/* Gantt chart component */}
-            <Gantt tasks={transformedData.flat()} />
-          </div>
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40  overflow-scroll">
+      <div className="bg-white p-4 rounded shadow-lg w-full xl:w-1/2 h-full overflow-y-auto overflow-x-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl">Filtered Data</h2>
+          <button onClick={onClose} className="text-black">
+            &times;
+          </button>
+        </div>
+        <div className=''>
+          {/* Gantt chart component */}
+          <Gantt tasks={transformedData.flat()}  />
         </div>
       </div>
-    </>
-  }
+    </div>
+  );
 };
 
 export default FilteredDataModal;

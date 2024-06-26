@@ -146,7 +146,7 @@ export const UserForm = ({setPath}) => {
       const docRef = await addDoc(collection(db, "Data"), { mainDetails, accomodation: formData.accomodation, transport: formData.transport, services: formData.services, officeInvoice: formData.officeInvoice });
   
      
-      await addDoc(collection(db, "Users"), { id: docRef.id, name: formData.mainDetails.guestName });
+      await addDoc(collection(db, "Users"), { id: docRef.id, name: formData.mainDetails.guestName ,fileNo: formData.mainDetails.fileNo });
   
      
       const agentRef = doc(db, "Agents", formData.mainDetails.agentId);

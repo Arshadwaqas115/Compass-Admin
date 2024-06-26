@@ -1,10 +1,14 @@
+import { AppContext } from '@/contexts/userContext';
 import { db } from '@/firebase/firebase';
 import { Avatar } from '@mui/material';
 import { doc, deleteDoc ,collection, query, where, getDocs} from "firebase/firestore";
+import { useContext } from 'react';
 import { toast } from 'react-toastify';
 
 export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) => {
 
+
+  const {user} = useContext(AppContext)
 
   const handleClick = () => {
     
@@ -19,7 +23,7 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
       setType(type);
     }
     else if(type === "TransportVendor"){
-      
+      console.log("clicked")
       setDocId(item?.id);
       setPath('chart');
       setType(type);
@@ -78,20 +82,24 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
      
     >
       <div className='flex items-center gap-4'>
-        <div>
+        {/* <div>
           <Avatar />
-        </div>
+        </div> */}
         <div>
           {item?.name}
         </div>
       </div>
       <div className='gap-4 flex'>
+
         <button  onClick={handleClick} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
           View
         </button>
-        <button  onClick={handleDelete} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
-          Delete
-        </button>
+        {user?.role !== "Employee" && (
+          <button  onClick={handleDelete} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
+            Delete
+          </button>
+        )}
+       
       </div>
     </div>
   );

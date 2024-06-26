@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -7,11 +7,14 @@ import { Loading } from '@/components/custom/loading';
 import { Card } from '../../../components/custom/usercard';
 import NewModal from '../../../components/modal/modal';
 import FilteredDataModal from  './FilteredDataModal'
+import { AppContext } from '@/contexts/userContext';
 export const Customers = ({ setPath, setDocId, setType }) => {
   const [showModal, setShowModal] = useState(false);
   const [dataFromChild, setDataFromChild] = useState('');
   const [graphView,setGraphView] = useState(false);
   const [showFilteredDataModal, setShowFilteredDataModal] = useState(false);
+  const {user} = useContext(AppContext)
+
 
   const handleFilteredDataClose = () => {
     setShowFilteredDataModal(false);
@@ -55,7 +58,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   
   useEffect(() => {
    
-    const userResults = users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const userResults = users?.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredUsers(userResults);
   }, [searchTerm, users]);
 
@@ -79,7 +82,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
   return (
     <div className="p-4">
       <NewModal show={showModal} onClose={handleClose} filteredData={receivedFilteredData}  setGraphView={setGraphView}/>
-      <FilteredDataModal show={showFilteredDataModal} data={dataFromChild} onClose={handleFilteredDataClose}  />
+      {showFilteredDataModal&& (<FilteredDataModal show={showFilteredDataModal} data={dataFromChild} onClose={handleFilteredDataClose}  />)}
       <div className="flex items-center justify-between border-b mb-4">
         <h1 className="text-xl p-4">Guests</h1>
         <div className="flex items-center space-x-2">
@@ -183,15 +186,17 @@ export const Customers = ({ setPath, setDocId, setType }) => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          {user?.role !== 'Employee'  && (
+            <button
+              onClick={() => {
+                setPath('add');
+              }}
+              className="w-10 bg-green-300 text-white h-10 rounded-full border flex items-center justify-center"
+            >
+              <h1 className="text-2xl">+</h1>
+            </button>
+          )}
           
-          <button
-            onClick={() => {
-              setPath('add');
-            }}
-            className="w-10 bg-green-300 text-white h-10 rounded-full border flex items-center justify-center"
-          >
-            <h1 className="text-2xl">+</h1>
-          </button>
         </div>
       </div>
 

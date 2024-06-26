@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 import { Loading } from '@/components/custom/loading';
 
 import { Card } from '../../../components/custom/usercard';
+import { AppContext } from '@/contexts/userContext';
 
 export const Vendors = ({ setPath, setDocId, setType }) => {
   const [users, setUsers] = useState([]);
@@ -12,6 +13,7 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const {user} = useContext(AppContext)
   const getUsersData = async () => {
     setLoading(true);
     try {
@@ -63,14 +65,17 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
             />
           </div>
           <div>
-            <button
-              onClick={() => {
-                setPath('add');
-              }}
-              className=" w-10 bg-green-300 text-white  h-10 rounded-full border"
-            >
-              <h1 className="text-2xl">+</h1>
-            </button>
+            {user?.role !== "Employee" && (
+              <button
+                onClick={() => {
+                  setPath('add');
+                }}
+                className=" w-10 bg-green-300 text-white  h-10 rounded-full border"
+              >
+                <h1 className="text-2xl">+</h1>
+              </button>
+
+            )}
           </div>
         </div>
       </div>

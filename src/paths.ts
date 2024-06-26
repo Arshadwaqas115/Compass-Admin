@@ -6,7 +6,9 @@ export const paths = {
     vendors:'/dashboard/hotelVendors',
     detail : '/dashboard/add-user',
     user_agent_list: '/dashboard/users',
-    tranportVendors: '/dashboard/transportVendors'
+    tranportVendors: '/dashboard/transportVendors',
+    employes : '/dashboard/employes'
+
     // overview: '/dashboard'
   },
   errors: { notFound: '/errors/not-found' },

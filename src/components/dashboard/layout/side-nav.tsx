@@ -22,24 +22,37 @@ import { Button } from '@mui/material';
 import { authClient } from '@/lib/auth/client';
 import { logger } from '@/lib/default-logger';
 import { useUser } from '@/hooks/use-user';
+import { paths } from '@/paths';
+import { AppContext } from '@/contexts/userContext';
 
 export function SideNav(): React.JSX.Element {
   const pathname = usePathname();
   const { checkSession } = useUser();
   const router = useRouter();
+  const {setUser} = React.useContext(AppContext)
 
   const handleSignOut = React.useCallback(async (): Promise<void> => {
     try {
-      const { error } = await authClient.signOut();
 
-      if (error) {
-        logger.error('Sign out error', error);
-        return;
+      const storedUser = localStorage.getItem('user');
+
+      if (storedUser) {
+        localStorage.removeItem('user')
+        setUser(null)
+        router.replace(paths.auth.signIn);
       }
 
-      await checkSession?.();
+      
+      // const { error } = await authClient.signOut();
 
-      router.refresh();
+      // if (error) {
+      //   logger.error('Sign out error', error);
+      //   return;
+      // }
+
+      // await checkSession?.();
+
+      // router.refresh();
     } catch (err) {
       logger.error('Sign out error', err);
     }

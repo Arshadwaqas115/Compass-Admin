@@ -1,14 +1,15 @@
 import { Loading } from "@/components/custom/loading";
 import { db } from "@/firebase/firebase";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import {Card} from "../../../components/custom/usercard";
+import { AppContext } from "@/contexts/userContext";
 export const Agents = ({ setPath, setDocId, setType }) => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const {user} = useContext(AppContext)
   const getUsersData = async () => {
     setLoading(true);
     try {
@@ -60,9 +61,12 @@ export const Agents = ({ setPath, setDocId, setType }) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
           </div>
-          <div>
-                <button onClick={()=>{setPath("add")}} className=" w-10 bg-green-300 text-white  h-10 rounded-full border"><h1 className="text-2xl">+</h1></button>
-          </div>
+          {user?.role !== "Employee" && (
+            
+            <div>
+                  <button onClick={()=>{setPath("add")}} className=" w-10 bg-green-300 text-white  h-10 rounded-full border"><h1 className="text-2xl">+</h1></button>
+            </div>
+          )}
           
         </div>
       </div>
