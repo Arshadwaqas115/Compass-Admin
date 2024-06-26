@@ -11,6 +11,7 @@ const Page = () => {
     const [path,setPath] = useState("agents")
     const [docId,setDocId] = useState("")
     const [type,setType] = useState("")
+ 
     return(
             <div className="pt-8">
                 {path === "chart" && <Chart setPath={setPath} docId={docId} setDocId={setDocId} type={type}/>}

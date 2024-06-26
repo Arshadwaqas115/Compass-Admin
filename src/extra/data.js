@@ -1,11 +1,11 @@
-export const roomOptions = ['single', 'double', 'triple'].map((item) => {
+export const roomOptions = ['single', 'double', 'triple',"quad","quint","suite"].map((item) => {
   return {
     value: item,
     label: item,
   };
 });
 
-export const hotelOptions = ['HotelOne', 'HotelTwo', 'HotelThree'].map((item) => {
+export const hotelOptions = ['Dar Al Tawhid','Fairmount Clock Tower',"Raffles Palace Makkah","Swiss Hotel Makkah","Swiss Al Maqam","Movenpick Hajar","Al Safwa Tower","Pullman Zam Zam","Royal Darul Aman","Makkah Hotel","Hilton Suites","Hayatt Regency","Conrad Makkah","Hilton Convention","Sheraton Makkah","Marriott Hotel Makkah","Anjum Hotel","Makarem Ajyad","Grand Hotel Makkah","Elaf Masher","La Maridien Makkah","Dar Al Eman Grand","Dar Al Eman Khalil","Oberoi Madinah","Darul Taqwa","Dar ul Eman IC","Movenpick Anwar e Madinah","Movenpick Madinah","Shaza Al Madinah","Al Rawada Royal Inn","Nozol Royal Inn","Dar al Hijra IC","Al Eiman Taibah","Saja Al Madinah","Al Haram Hotel","Madinah marriot","Crown Plaza","Dallah Taybah","Ansar Golden","Al Eiman Royal","Al Madinah Harmony","Jewar Al Saqafeh","Al Nokhba Royal Inn","Dar Al Eman Al Minar","Leader Al Muna Kareem"].map((item) => {
   return {
     value: item,
     label: item,

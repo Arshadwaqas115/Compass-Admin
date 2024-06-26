@@ -3,7 +3,7 @@ import { sectorOptions, vehicleOptions } from '@/extra/data';
 import Select from 'react-select';
 import {SharedModal} from "../../components/modal/sharedmodal"; 
 import CreatableSelect from 'react-select/creatable'
-export const Transport = ({ formData, data, setFormData, handleChange,transportVendorOptions,mainDetails }) => {
+export const Transport = ({ formData, data, setFormData, handleChange,transportVendorOptions,mainDetails,  fetchData}) => {
   const [showVendorModal, setShowVendorModal] = useState(false);
   const headers = [
     'File No',
@@ -226,7 +226,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
           </tbody>
         </table>
       </div>
-      {showVendorModal && <SharedModal onClose={closeVendorModal} type="transport" />}
+      {showVendorModal && <SharedModal onClose={closeVendorModal} type="transport"   fetchData={fetchData} />}
     </div>
   );
 };

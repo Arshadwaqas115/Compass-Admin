@@ -22,8 +22,12 @@ const Chart = ({ setPath, docId, type }) => {
       if (type === "User") {
         docRef = doc(db, "Data", docId);
       } else if (type === "Vendor") {
+        docRef = doc(db, "TransportVendor", docId);
+      }
+      else if (type === "TransportVendor") {
         docRef = doc(db, "TransportVendors", docId);
       }
+
 
       const docSnap = await getDoc(docRef);
       let temp = docSnap.data();
@@ -34,6 +38,11 @@ const Chart = ({ setPath, docId, type }) => {
         const guestname = mainDetails.guestName || "";
         const fileno = mainDetails.fileNo || "";
 
+      }
+      else if(type === "TansportVendor"){
+        const mainDetails = temp.mainDetails || {};
+        const guestname = mainDetails.guestName || "";
+        const fileno = mainDetails.fileNo || "";
       }
 
       setData(temp);
@@ -57,7 +66,7 @@ const Chart = ({ setPath, docId, type }) => {
   ];
 
 
-  const filteredSteps = type === "Vendor" ? steps.filter(step => step.name === 'Transport' ) : steps;
+  const filteredSteps = type === "Vendor" || type ==="TransportVendor" ? steps.filter(step => step.name === 'Transport' ) : steps;
 
   if (loading) {
     return <Loading />;
@@ -70,7 +79,7 @@ const Chart = ({ setPath, docId, type }) => {
           <div>
             <Avatar />
           </div>
-          {type === "Agent" && ( <div className="text-xl">
+          {type === "TransportVendor"  && ( <div className="text-xl">
             {data?.name}
           </div>)}
           {type === "User" && ( <div className="text-xl">

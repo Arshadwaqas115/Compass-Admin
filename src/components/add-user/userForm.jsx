@@ -200,42 +200,42 @@ export const UserForm = ({setPath}) => {
     }
   };
   
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const agentSnapshot = await getDocs(collection(db, "Agents"));
+      const agentsList = agentSnapshot.docs.map(doc => ({
+        id: doc.id,
+        value : doc?.data()?.name,
+        label :doc?.data()?.name
+      }));
+      setAgentsOptions(agentsList);
+
+      const vendorSnapshot = await getDocs(collection(db, "Vendors"));
+      const vendorslist = vendorSnapshot.docs.map(doc => ({
+        id: doc.id,
+        value : doc?.data()?.name,
+        label :doc?.data()?.name
+      }));
+      setVendorOptions(vendorslist);
+   
+      const transportVendors = await getDocs(collection(db, "TransportVendors"));
+      const transportVendorslist = transportVendors.docs.map(doc => ({
+            id: doc.id,
+            value : doc?.data()?.name,
+            label :doc?.data()?.name
+      }));
+      setTransportVendorOptions(transportVendorslist);
+    } catch (error) {
+      console.error("Error fetching agents:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
    
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const agentSnapshot = await getDocs(collection(db, "Agents"));
-        const agentsList = agentSnapshot.docs.map(doc => ({
-          id: doc.id,
-          value : doc?.data()?.name,
-          label :doc?.data()?.name
-        }));
-        setAgentsOptions(agentsList);
-
-        const vendorSnapshot = await getDocs(collection(db, "Vendors"));
-        const vendorslist = vendorSnapshot.docs.map(doc => ({
-          id: doc.id,
-          value : doc?.data()?.name,
-          label :doc?.data()?.name
-        }));
-        setVendorOptions(vendorslist);
-     
-        const transportVendors = await getDocs(collection(db, "TransportVendors"));
-        const transportVendorslist = transportVendors.docs.map(doc => ({
-              id: doc.id,
-              value : doc?.data()?.name,
-              label :doc?.data()?.name
-        }));
-        setTransportVendorOptions(transportVendorslist);
-      } catch (error) {
-        console.error("Error fetching agents:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+   
 
       
     fetchData();
@@ -249,6 +249,7 @@ export const UserForm = ({setPath}) => {
       data={formData.mainDetails} 
       handleChange={handleChange} 
       agentOptions={agentOptions}
+      fetchData={fetchData}
       errors={formErrors.mainDetails || {}} /> 
    },
 
@@ -259,7 +260,9 @@ export const UserForm = ({setPath}) => {
       formData={formData} 
       setFormData={setFormData} 
       data={formData.accomodation} 
-      handleChange={handleChange} /> 
+      handleChange={handleChange}
+      fetchData={fetchData}
+      /> 
     },
 
     { name: 'Transport', 
@@ -271,6 +274,7 @@ export const UserForm = ({setPath}) => {
       setFormData={setFormData} 
       data={formData.transport} 
       handleChange={handleChange} 
+      fetchData={fetchData}
       /> 
     },
 

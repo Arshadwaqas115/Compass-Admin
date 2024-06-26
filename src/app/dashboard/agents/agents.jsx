@@ -79,6 +79,7 @@ export const Agents = ({ setPath, setDocId, setType }) => {
                   setDocId={setDocId}
                   type="Agent"
                   setType={setType}
+                  getUsersData={getUsersData}
                 />
               ))
             ) : (

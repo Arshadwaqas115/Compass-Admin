@@ -2,14 +2,22 @@
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState, useEffect } from "react";
 import Select from 'react-select';
+import {SharedModal} from "../../components/modal/sharedmodal"; 
 
-export const Maindetails = ({ data, handleChange, agentOptions, errors }) => {
+export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData }) => {
   const [selected, setSelected] = useState(null);
-
+  const [showVendorModal, setShowVendorModal] = useState(false);
   const handleSelectChange = (selectedOption) => {
     setSelected(selectedOption);
   };
 
+  const openVendorModal = () => {
+    setShowVendorModal(true);
+  };
+
+  const closeVendorModal = () => {
+    setShowVendorModal(false);
+  };
   useEffect(() => {
     if (selected) {
       handleChange("mainDetails", "agent", selected.label); 
@@ -57,13 +65,20 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors }) => {
           <div>
             <h1 className="font-semibold">Agent</h1>
           </div>
-          <div>
+          <div className="flex items-center">
             <Select
+              className="flex-grow"
               options={agentOptions}
               value={selected}
               onChange={handleSelectChange}
               isClearable
             />
+            <button
+              onClick={openVendorModal}
+              className="ml-2 bg-green-500 text-white p-2 rounded-full"
+            >
+              +
+            </button>
           </div>
           {errors?.agent && <p className="text-red-500">{errors.agent}</p>}
         </div>
@@ -176,6 +191,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors }) => {
           </div>
         )}
       </div>
+      {showVendorModal && <SharedModal onClose={closeVendorModal} type="agent"   fetchData={fetchData} />}
     </div>
   );
 };

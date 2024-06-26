@@ -80,7 +80,7 @@ export const Vendors = ({ setPath, setDocId, setType }) => {
           <div>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((item, index) => (
-                <Card key={index} item={item} setPath={setPath} setDocId={setDocId} type="Vendor" setType={setType} />
+                <Card key={index} item={item} setPath={setPath} setDocId={setDocId} type="TransportVendor" setType={setType}     getUsersData={getUsersData}/>
               ))
             ) : (
               <p className="">{noResultsMessage}</p>

@@ -200,7 +200,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
           <div className="space-y-2">
             {filteredUsers.length > 0 ? (
               filteredUsers.map((item, index) => (
-                <Card key={index} item={item} setPath={setPath} setDocId={setDocId} type="User" setType={setType} />
+                <Card key={index} item={item} setPath={setPath} setDocId={setDocId} type="User" setType={setType}  getUsersData={ getUsersData} />
               ))
             ) : (
               <p className="">{noResultsMessage}</p>

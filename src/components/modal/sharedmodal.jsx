@@ -4,10 +4,11 @@ import { db } from "@/firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
 import { toast } from "react-toastify";
-export const SharedModal = ({type,onClose}) =>{
+export const SharedModal = ({type,onClose,fetchData}) =>{
     const [name,setName] = useState("")
 
     const submitData = async() =>{
+
         if(type === "hotel"){
           
             if (name.trim() === "") {
@@ -21,26 +22,44 @@ export const SharedModal = ({type,onClose}) =>{
                 await addDoc(collection(db, "Vendors"), { name: name });
                 toast.success("Vendor added successfully")
                 setName("")
+                fetchData()
               } catch (error) {
              
               }
-        }
-        else if(type === "transport"){
-            if (name.trim() === "") {
-                alert("Please fill the detail");
-                return;
-              }
-          
-          
-          
-              try {
-                await addDoc(collection(db, "TransportVendors"), { name: name });
-                toast.success("Vendor added successfully")
-                setName("")
-              } catch (error) {
-             
-              }
-        }
+            }
+            else if(type === "transport"){
+                if (name.trim() === "") {
+                    alert("Please fill the detail");
+                    return;
+                }
+            
+            
+            
+                try {
+                    await addDoc(collection(db, "TransportVendors"), { name: name });
+                    toast.success("Vendor added successfully")
+                    setName("")
+                    fetchData()
+                } catch (error) {
+                
+                }
+            }
+      
+            else if(type === "agent"){
+                if (name.trim() === "") {
+                    alert("Please fill the detail");
+                    return;
+                }
+
+                try {
+                    await addDoc(collection(db, "Agents"), { name: name });
+                    toast.success("Agent added successfully")
+                    setName("")
+                    fetchData()
+                } catch (error) {
+                    
+                }
+            }
     }
     
     return(
@@ -50,16 +69,32 @@ export const SharedModal = ({type,onClose}) =>{
                 <div className="mt-4 flex flex-col items-center justify-center gap-6 p-4">
                        
                                 <div>
-                                    <h1 className="font-bold text-xl">Vendor Name</h1>
+                                    {type === "agent" ? (
+                                          <h1 className="font-bold text-xl">Agent Name</h1>
+                                        ):(
+                                            <h1 className="font-bold text-xl">Vendor Name</h1>
+                                        )}
+                                    
                                 </div>
                                 <div>
-                                <input
-                                    type="text"
-                                    placeholder="Enter vendor name"
-                                    className="border p-2 rounded-lg py-3 text-center"
-                                    value={name}
-                                    onChange={(e) => { setName(e.target.value) }}
-                                />
+                                {type === "agent" ? (
+                                           <input
+                                           type="text"
+                                           placeholder="Enter agent name"
+                                           className="border p-2 rounded-lg py-3 text-center"
+                                           value={name}
+                                           onChange={(e) => { setName(e.target.value) }}
+                                       />
+                                        ):(
+                                            <input
+                                            type="text"
+                                            placeholder="Enter vendor name"
+                                            className="border p-2 rounded-lg py-3 text-center"
+                                            value={name}
+                                            onChange={(e) => { setName(e.target.value) }}
+                                        />
+                                        )}
+                              
                                 </div>
                                 <div>
                                 <button 

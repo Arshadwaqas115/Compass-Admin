@@ -24,7 +24,7 @@ const headers = [
   'Vendor',
 ];
 
-export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails }) => {
+export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData }) => {
   const [rowData, setRowData] = useState({
     fileno: mainDetails.fileNo,
     guestname: mainDetails.guestName,
@@ -269,7 +269,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
           </tbody>
         </table>
       </div>
-      {showVendorModal && <SharedModal onClose={closeVendorModal} type="hotel" />}
+      {showVendorModal && <SharedModal fetchData={fetchData} onClose={closeVendorModal} type="hotel"  />}
     </div>
   );
 };
