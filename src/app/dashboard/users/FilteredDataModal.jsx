@@ -39,7 +39,11 @@ const FilteredDataModal = ({ show, onClose, data }) => {
 
 
   useState(() => {
-    const transformed = data.map((guest) => transformAccommodationEntries(guest));
+    let transformed
+    if(data){
+      transformed = data?.map((guest) => transformAccommodationEntries(guest));
+    }
+     
     setTransformedData(transformed);
   }, [data]);
 
