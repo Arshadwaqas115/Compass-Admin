@@ -72,7 +72,7 @@ export const Agents = ({ setPath, setDocId, setType }) => {
       </div>
 
       <div className="mt-4">
-        <div className="h-96 overflow-y-scroll">
+        <div className="h-[80vh] overflow-y-scroll">
           <div>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((item, index) => (
