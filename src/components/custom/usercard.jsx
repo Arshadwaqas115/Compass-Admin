@@ -35,6 +35,11 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
     }
   };
   
+
+  const handleEdit = () => {
+    setDocId(item?.id);
+    setPath('edit');
+  }
   const handleDelete = async() =>{
     
         if(type === "Agent"){
@@ -85,15 +90,40 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
         {/* <div>
           <Avatar />
         </div> */}
-        <div>
-          {item?.name}
+        {type === "User" && (
+        <div className='flex flex-row gap-8'>
+           <div className='border-r-2 pr-2 w-24 truncate'>
+                 {item?.fileNo ===  undefined ? "xxxxxxx" : item?.fileNo}
+               
+           </div>
+           <div>
+                 {item?.name}
+           </div>
+        
         </div>
+
+        )}
+        {type !== "User" && (
+        <div className='flex flex-row gap-4'>
+           <div>
+                 {item?.name}
+           </div>
+           
+        
+        </div>
+
+        )}
       </div>
       <div className='gap-4 flex'>
-
+        
         <button  onClick={handleClick} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
           View
         </button>
+        {user?.role !== "Employee" && type === "User" && (
+          <button  onClick={handleEdit} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
+            Edit
+          </button>
+        )} 
         {user?.role !== "Employee" && (
           <button  onClick={handleDelete} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
             Delete

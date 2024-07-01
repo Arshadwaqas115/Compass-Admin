@@ -25,7 +25,8 @@ const headers = [
   'Selling',
   'Purchase',
   'Vendor',
-  'Rate'
+  'Rate',
+  'Status'
 ];
 
 export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData }) => {
@@ -45,6 +46,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     vendor: '',
     selling: '',
     purchase: '',
+    status: 'booked'
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -118,6 +120,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       selling: '',
       purchase: '',
       rate:0,
+      status: 'booked'
     });
   };
 
@@ -141,6 +144,11 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   };
   
 
+  const handleBookingStatus = (index) => {
+    const updatedData = [...data];
+    updatedData[index].status = updatedData[index].status === 'booked' ? 'Cancelled' : 'booked';
+    setFormData({ ...formData, transport: updatedData });
+  };
   return (
     <div>
       <div className="mb-8 text-xl">
@@ -148,7 +156,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       </div>
       <div className="grid grid-cols-3 gap-4">
         {headers
-          .filter((header) => header !== 'File No' && header !== 'Guest Name' && header !== 'Rate')
+          .filter((header) => header !== 'File No' && header !== 'Guest Name' && header !== 'Rate' && header !== 'Status')
           .map((header, index) => {
             const field = header.toLowerCase().replace(/ /g, '');
             return (
@@ -260,7 +268,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                 <tr key={rowIndex}>
                   {headers.map((header, index) => {
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
-                      console.log(field)
+                 
                     if(field === "checkinn" || field === "checkout"){
                       return (
                         <td key={index} className="border px-4 py-2">
@@ -286,7 +294,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
 
                     }
                   })}
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex gap-4">
                     <button
                       onClick={() => handleEditRow(rowIndex)}
                       className="mr-2 bg-yellow-500 text-white p-1 rounded"
@@ -295,6 +303,9 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     </button>
                     <button onClick={() => handleDeleteRow(rowIndex)} className="bg-red-500 text-white p-1 rounded">
                       Delete
+                    </button>
+                    <button onClick={() => handleBookingStatus(rowIndex)} className="bg-blue-500 text-white p-1 rounded">
+                      {data[rowIndex].status === 'booked' ? 'Cancel' : 'Book'}
                     </button>
                   </td>
                 </tr>

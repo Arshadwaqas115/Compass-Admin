@@ -3,9 +3,12 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { useState, useEffect } from "react";
 import Select from 'react-select';
 import {SharedModal} from "../../components/modal/sharedmodal"; 
-import dayjs from "dayjs";
-export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData,handleSave }) => {
-  const [selected, setSelected] = useState(null);
+import { toast } from "react-toastify";
+
+export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData }) => {
+  const agent = agentOptions.find((agent) => agent.name === data?.mainDetails?.agent);
+  
+  const [selected, setSelected] = useState(agent);
   const [showVendorModal, setShowVendorModal] = useState(false);
   const handleSelectChange = (selectedOption) => {
     setSelected(selectedOption);
@@ -34,17 +37,19 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
         <h1>Step 1: Main Details</h1>
       </div>
       <div className="grid grid-cols-3 p-4 pb-2 gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2"  >
           <div>
             <h1 className="font-semibold">File no</h1>
           </div>
-          <div>
+          <div >
             <input
               type="text"
               placeholder="file no"
-              className="border p-2 rounded-lg py-3"
+              className="border p-2 rounded-lg py-3 bg-gray-200"
               value={data.fileNo}
+           
               onChange={(e) => handleChange("mainDetails", "fileNo", e.target.value)}
+              disabled
             />
           </div>
           {errors?.fileNo && <p className="text-red-500">{errors.fileNo}</p>}
@@ -55,8 +60,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
           </div>
           <div>
             <DatePicker
-              value={dayjs(data.date)}
-              format="DD-MM-YY"
+              value={data.date}
               onChange={(date) => handleChange("mainDetails", "date", date)}
             />
           </div>
@@ -191,11 +195,6 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
             {errors?.visaCount && <p className="text-red-500">{errors.visaCount}</p>}
           </div>
         )}
-      </div>
-      <div className="flex justify-end mt-4">
-        <button onClick={()=>{handleSave()}} className="bg-blue-500 text-white p-2 rounded-lg w-40">
-          Save Main Details
-        </button>
       </div>
       {showVendorModal && <SharedModal onClose={closeVendorModal} type="agent"   fetchData={fetchData} />}
     </div>

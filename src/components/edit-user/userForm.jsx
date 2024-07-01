@@ -11,7 +11,7 @@ import {  addDoc, doc, setDoc, collection, getDocs, getDoc } from "firebase/fire
 import {db} from "../../firebase/firebase"
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-export const UserForm = ({setPath}) => {
+export const UserForm = ({setPath,data}) => {
 
   
   const [loading, setLoading] = useState(false);
@@ -20,19 +20,12 @@ export const UserForm = ({setPath}) => {
   const [vendorOptions,setVendorOptions] = useState([])
   const [transportVendorOptions,setTransportVendorOptions] = useState([])
   const [formErrors, setFormErrors] = useState({});
-  const [isMainDetailsSaved, setIsMainDetailsSaved] = useState(false);
-  const handleSaveMainDetails = () => {
-    if (validateMainDetails()) {
-      setIsMainDetailsSaved(true);
-      toast.success("Main Details Saved Successfully.");
-    } else {
-      toast.error("Please fill out all required fields in Main Details.");
-    }
-  };
+
+
 
   const initialFormData = {
     mainDetails: {
-      fileNo: "",
+      fileNo: data?.mainDetails?.fileNo,
       date: null,
       agent: "",
       agentId: "",
@@ -50,10 +43,12 @@ export const UserForm = ({setPath}) => {
     officeInvoice: [],
   };
 
+  
+ 
   const [formData, setFormData] = useState({
     mainDetails: {
-      fileNo: "",
-      date: dayjs().format('MM-DD-YY'),
+      fileNo: data?.mainDetails?.fileno,
+      date: null,
       agent:"",
       agentId: "",
       guestName: "",
@@ -112,7 +107,7 @@ export const UserForm = ({setPath}) => {
 
   const validateMainDetails = () => {
     const errors = {};
-    const requiredFields = ["fileNo", "date", "agentId", "guestName"];
+    const requiredFields = ["fileNo", "date", "agentId", "guestName", "visaCompany"];
 
     requiredFields.forEach(field => {
       if (!formData.mainDetails[field]) {
@@ -133,11 +128,12 @@ export const UserForm = ({setPath}) => {
       toast.error("Please fill out all required fields in Main Details.");
       return;
     }
+    
     try {
       setLoading(true);
-      const agentName = agentOptions.find((item) =>  {return item.id === formData.mainDetails.agentId})
-      
-   
+  
+      const agentName = agentOptions.find((item) => item.id === formData.mainDetails.agentId);
+  
       const mainDetails = {
         fileNo: formData.mainDetails.fileNo,
         date: formData.mainDetails.date ? dayjs(formData.mainDetails.date).format("MM-DD-YYYY") : "",
@@ -149,8 +145,7 @@ export const UserForm = ({setPath}) => {
         ra: formData.mainDetails.ra,
         visaRequired: formData.mainDetails.visaRequired,
         visaCount: formData.mainDetails.visaCount,
-      };  
-     
+      };
       const updatedFormDataAccomodation = formData.accomodation.map(acc => {
         return {
           ...acc,
@@ -167,69 +162,78 @@ export const UserForm = ({setPath}) => {
           date: acc.date ? dayjs(acc.date).format("MM-DD-YYYY") : "",
         };
       })
-   
-
-    
-  
-    
-    
-      const docRef = await addDoc(collection(db, "Data"), { mainDetails, accomodation: updatedFormDataAccomodation, transport: updatedFormDataTransport, services: formData.services, officeInvoice: formData.officeInvoice });
-  
+      let docRef;
+      if (data?.docId) {
+        docRef = doc(db, "Data", data.docId);
+        
+        await setDoc(docRef, { mainDetails, accomodation: updatedFormDataAccomodation, transport: updatedFormDataTransport, services: formData.services, officeInvoice: formData.officeInvoice }, { merge: true });
+       
+        
      
-      await addDoc(collection(db, "Users"), { id: docRef.id, name: formData.mainDetails.guestName ,fileNo: formData.mainDetails.fileNo });
-  
-     
-      const agentRef = doc(db, "Agents", formData.mainDetails.agentId);
-      const agentDoc = await getDoc(agentRef);
-      const agentData = agentDoc.data() || {};
-      const updatedAgentData = {
-        ...agentData,
-        accomodation: [...(agentData.accomodation || []), ...updatedFormDataAccomodation],
-        transport: [...(agentData.transport || []), ...updatedFormDataTransport],
-        mainDetails,
-      };
-      await setDoc(agentRef, updatedAgentData, { merge: true });
-  
+        const userSnapshot = await getDocs(collection(db, "Users"));
+        const userDoc = userSnapshot.docs.find(doc => doc.data().id === data.docId);
+       
+        const userRef = doc(db, "Users", userDoc.id);
+        await setDoc(userRef, { id: data.docId, name: formData.mainDetails.guestName, fileNo: formData.mainDetails.fileNo }, { merge: true });;
       
+  
+        // Update agent document
+        const agentRef = doc(db, "Agents", formData.mainDetails.agentId);
+        const agentDoc = await getDoc(agentRef);
+        const agentData = agentDoc.data() || {};
+        const updatedAgentAccommodation = (agentData.accomodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataAccomodation);
+        const updatedAgentTransport = (agentData.transport || []).filter(trans => trans.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataTransport);
+        const updatedAgentData = {
+          ...agentData,
+          accomodation: updatedAgentAccommodation,
+          transport: updatedAgentTransport,
+          mainDetails,
+        };
+        console.log("updated",updatedAgentData)
+        await setDoc(agentRef, updatedAgentData, { merge: true });
+  
+      // Update accommodation vendors
       const accommodationVendors = formData.accomodation.map(acc => {
         const vendor = vendorOptions.find(v => v.label === acc.vendor);
         return vendor ? vendor.id : null;
       }).filter(Boolean);
-  
       const uniqueAccommodationVendors = [...new Set(accommodationVendors)];
       for (const vendorId of uniqueAccommodationVendors) {
         const vendorRef = doc(db, "Vendors", vendorId);
         const vendorDoc = await getDoc(vendorRef);
         const vendorData = vendorDoc.data() || {};
-        const updatedAccommodation = [...(vendorData.accommodation || []), ...updatedFormDataAccomodation.filter(acc => acc.vendor === vendorOptions.find(v => v.id === vendorId).label)];
+        const updatedAccommodation = (vendorData.accommodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataAccomodation.filter(acc => acc.vendor === vendorOptions.find(v => v.id === vendorId).label));
         await setDoc(vendorRef, { accommodation: updatedAccommodation }, { merge: true });
       }
   
+      // Update transport vendors
       const transportVendors = formData.transport.map(trans => {
         const vendor = transportVendorOptions.find(v => v.label === trans.vendor);
         return vendor ? vendor.id : null;
       }).filter(Boolean);
-  
       const uniqueTransportVendors = [...new Set(transportVendors)];
       for (const vendorId of uniqueTransportVendors) {
         const vendorRef = doc(db, "TransportVendors", vendorId);
         const vendorDoc = await getDoc(vendorRef);
         const vendorData = vendorDoc.data() || {};
-        const updatedTransport = [...(vendorData.transport || []), ...updatedFormDataTransport.filter(trans => trans.vendor === transportVendorOptions.find(v => v.id === vendorId).label)];
+        const updatedTransport = (vendorData.transport || []).filter(trans => trans.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataTransport.filter(trans => trans.vendor === transportVendorOptions.find(v => v.id === vendorId).label));
         await setDoc(vendorRef, { transport: updatedTransport }, { merge: true });
       }
   
-      setFormData(initialFormData);
-      toast.success("User Added Successfully");
-      console.log("Form data submitted successfully with ID:", docRef.id);
-    } catch (error) {
-      console.error( error);
-      toast.error("Error submitting form data");
-    } finally {
-      setLoading(false);
+        setFormData(initialFormData);
+        toast.success("User Data Successfully Saved");
+        setPath("users");
+        console.log("Form data submitted successfully with ID:", data?.docId || docRef.id);
+      
     }
+      }
+        catch (error) {
+          console.error("Error submitting form data:", error);
+          toast.error("Error submitting form data");
+        } finally {
+          setLoading(false);
+        }
   };
-  
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -264,13 +268,39 @@ export const UserForm = ({setPath}) => {
   };
 
   useEffect(() => {
-   
-   
-
-      
     fetchData();
-  }, []);
+    
+    setFormData(prevData => ({
+      ...prevData,
+      mainDetails: {
+        ...prevData.mainDetails,
+        date: data?.mainDetails?.date ? dayjs(data?.mainDetails?.date) : null,
+        fileNo: data?.mainDetails?.fileNo,
+        agent: data?.mainDetails?.agent,
+        agentId: data?.mainDetails?.agentId,
+        guestName: data?.mainDetails?.guestName,
+        details: data?.mainDetails?.details,
+        visaCompany: data?.mainDetails?.visaCompany,
+        pa: data?.mainDetails?.pa,
+        ra: data?.mainDetails?.ra,
+        visaRequired: data?.mainDetails?.visaRequired,
+        visaCount: data?.mainDetails?.visaCount,
+      },
+      accomodation: data?.accomodation.map((item) => ({
+        ...item,
+        status: item.status ? item.status : 'booked', // Set status to 'booked' only if status is not defined
+      })),
+      transport: data?.transport.map((item) => ({
+        ...item,
+        status: item.status ? item.status : 'booked', // Set status to 'booked' only if status is not defined
+      })),
+      services: data?.services,
+      officeInvoice: data?.officeInvoice
+    }));
 
+     
+     
+  }, []);
 
 
   const steps = [
@@ -280,9 +310,7 @@ export const UserForm = ({setPath}) => {
       handleChange={handleChange} 
       agentOptions={agentOptions}
       fetchData={fetchData}
-      handleSave={handleSaveMainDetails}
       errors={formErrors.mainDetails || {}} /> 
-      
    },
 
     { name: 'Accomodation', 
@@ -325,28 +353,14 @@ export const UserForm = ({setPath}) => {
     },
   ];
 
-  const handleStepChange = (index) => {
-    if (index !== 0 && !isMainDetailsSaved) {
-      toast.error("Please save the Main Details before proceeding.");
-      return;
-    }
-    setStep(index);
-  };
+  
 
   if (loading) {
     return <Loading />;
   } else {
     return (
       <div>
-        <div className='flex flex-row justify-between mb-12'>
-              <div>
-                 <h1 className='text-xl'>Add Guest</h1>
-              </div>
-              <div>
-                    <button className="bg-black py-2 px-4 rounded-full text-white " onClick={() => { setPath("users") }}>Back</button>
-              </div>
-             
-        </div>
+      
         <div className="flex flex-row justify-center gap-4 mb-8">
           {steps.map((stepInfo, index) => (
             <div key={index}>
@@ -354,7 +368,7 @@ export const UserForm = ({setPath}) => {
                 className={`border p-2 rounded-xl text-lg cursor-pointer ${
                   step === index ? 'bg-blue-400 text-white' : 'bg-black text-white hover:bg-blue-400'
                 }`}
-                onClick={() => handleStepChange(index)}
+                onClick={() => setStep(index)}
               >
                 {stepInfo.name}
               </h1>
@@ -366,8 +380,8 @@ export const UserForm = ({setPath}) => {
         </div>
         <div className="flex justify-end mt-12">
           {step === steps.length - 1 && (
-            <button onClick={handleSubmit} className="bg-blue-500 text-white p-2 rounded-lg w-40">
-              Submit
+            <button onClick={handleSubmit} className="bg-green-500 text-white p-2 rounded-lg w-40">
+              Save
             </button>
           )}
         </div>

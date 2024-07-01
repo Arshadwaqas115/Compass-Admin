@@ -13,6 +13,9 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
       <p className="italic mt-4">
         We would like to thank you for choosing our services we are pleased to confirm your reservation.
       </p>
+      <div>
+        <div className='text-right font-bold text-xl'>Agent Name: {printData.agent}</div>
+      </div>
       {/* <div>Reservation Number: {printData.ref}</div> */}
       <div className="italic font-bold mt-4 mb-4">
         <div>Guest Name: {printData.guestName}</div>
@@ -28,6 +31,7 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
           <th className="border px-4 py-2">QTY</th>
           <th className="border px-4 py-2">Room Type</th>
           <th className="border px-4 py-2">Meals</th>
+          <th className="border px-4 py-2">Rate</th>
         </tr>
       </thead>
       <tbody>
@@ -35,6 +39,7 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
           <td className="border px-4 py-2">{printData.quantity}</td>
           <td className="border px-4 py-2">{printData.roomType}</td>
           <td className="border px-4 py-2">{printData.meals}</td>
+          <th className="border px-4 py-2">{printData.rate.toFixed(2)}</th>
         </tr>
       </tbody>
     </table>
@@ -77,7 +82,7 @@ Voucher.displayName = 'Voucher';
 
 export const Accomodation = ({ data, customer, type }) => {
 
- 
+  
   const customerHeaders = [
     'File No',
     'Guest Name',
@@ -94,7 +99,9 @@ export const Accomodation = ({ data, customer, type }) => {
     'Vendor',
     'Selling',
     'Purchase',
+    'Rate',
     'Print',
+    
   ];
   const agentHeaders = [
     'File No',
@@ -112,6 +119,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Vendor',
     'Selling',
     'Purchase',
+    'Rate',
     'Print',
   ];
   const vendorHeaders = [
@@ -130,6 +138,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Vendor',
     'Selling',
     'Purchase',
+    'Rate',
     'Print',
   ];
   const getHeaders = () => {
@@ -156,9 +165,11 @@ export const Accomodation = ({ data, customer, type }) => {
       hotelName: row.hotelname,
       guestName: row.guestname,
       nights: row.nights,
-      quantity: row.quantity,
+      quantity: row.roomsquantity,
       roomType: row.roomtype,
       meals: row.meals,
+      agent:row.vendor,
+      rate:row.nights*row.roomsquantity*row.selling
     };
     setPrintData(objectForPrint);
   };
@@ -198,12 +209,21 @@ export const Accomodation = ({ data, customer, type }) => {
                 <tr key={rowIndex}>
                   {headers.slice(0, -1).map((header, index) => {
                     const field = header.toLowerCase().replace(/ /g, '');
-                    console.log(field);
-                    return (
-                      <td key={index} className="border px-4 py-2">
-                        {row[field]}
+                    if(field ==='rate'){
+                      const rate = row['nights'] * row['roomsquantity'] * row['selling'];
+                      return(
+                        <td key={index} className="border px-4 py-2">
+                        {rate.toFixed(2)} {/* Display rate with 2 decimal places */}
                       </td>
-                    );
+                      )
+                    }else{
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                          {row[field]}
+                        </td>
+                      );
+                    }
+                    
                   })}
                   <td className="border px-4 py-2">
                     <button onClick={() => handlePrint(row)} className="bg-blue-500 text-white px-2 py-1 rounded">

@@ -12,7 +12,7 @@ export const hotelOptions = ['Dar Al Tawhid','Fairmount Clock Tower',"Raffles Pa
   };
 });
 
-export const vehicleOptions = ['car', 'hiace', 'coaster'].map((item) => {
+export const vehicleOptions = ['GMC', 'hiace', 'coaster'].map((item) => {
   return {
     value: item,
     label: item,

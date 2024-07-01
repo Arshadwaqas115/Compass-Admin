@@ -4,7 +4,7 @@
 import Chart from "./Chart";
 import { useState } from "react";
 import {Customers} from "./customers"
-// import {EditForm} from "./editForm"
+ import {EditForm} from "./editForm"
 import { UserForm } from "@/components/add-user/userForm";
 const Page = () => {
 
@@ -17,7 +17,7 @@ const Page = () => {
                 {path === "chart" && <Chart setPath={setPath} docId={docId} setDocId={setDocId} type={type}/>}
                 {path === "users" && <Customers setPath={setPath} setDocId={setDocId} setType={setType}/>}
                 {path === "add" && <UserForm setPath={setPath}/>}
-                {/* {path === "edit" && <EditForm setPath={setPath} docId={docId} />} */}
+                {path === "edit" && <EditForm setPath={setPath} docId={docId} />}
             </div>
 
     )
