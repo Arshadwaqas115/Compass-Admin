@@ -6,6 +6,9 @@ import Select from 'react-select';
 import { hotelOptions, mealOptions, roomOptions } from '../../extra/data';
 import {SharedModal} from "../../components/modal/sharedmodal";
 import CreatableSelect from 'react-select/creatable'
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+
 const headers = [
   'File No',
   'Guest Name',
@@ -22,6 +25,7 @@ const headers = [
   'Selling',
   'Purchase',
   'Vendor',
+  'Rate'
 ];
 
 export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData }) => {
@@ -35,8 +39,8 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     roomtype: '',
     meals: '',
     roomsquantity: '',
-    checkinn: '',
-    checkout: '',
+    checkinn: dayjs().format('MM-DD-YY'),
+    checkout: dayjs().format('MM-DD-YY'),
     nights: '',
     vendor: '',
     selling: '',
@@ -72,12 +76,12 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   };
 
   const handleAddRow = () => {
-    for (const key in rowData) {
-      if (rowData[key] === '' && key !== 'nights') {
-        alert(`Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`);
-        return;
-      }
-    }
+    // for (const key in rowData) {
+    //   if (rowData[key] === '' && key !== 'nights') {
+    //     alert(`Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`);
+    //     return;
+    //   }
+    // }
 
     if (rowData.nights <= 0) {
       alert('Check Out date must be later than Check Inn date');
@@ -107,12 +111,13 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       roomtype: '',
       meals: '',
       roomsquantity: '',
-      checkinn: '',
-      checkout: '',
+   checkinn: dayjs().format('MM-DD-YY'),
+    checkout: dayjs().format('MM-DD-YY'),
       nights: '',
       vendor: '',
       selling: '',
       purchase: '',
+      rate:0,
     });
   };
 
@@ -143,7 +148,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       </div>
       <div className="grid grid-cols-3 gap-4">
         {headers
-          .filter((header) => header !== 'File No' && header !== 'Guest Name')
+          .filter((header) => header !== 'File No' && header !== 'Guest Name' && header !== 'Rate')
           .map((header, index) => {
             const field = header.toLowerCase().replace(/ /g, '');
             return (
@@ -203,9 +208,24 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     value={rowData[field]}
                     readOnly
                   />
-                ) : (
+                ) 
+                :
+                
+                
+                header === "Check Inn" || header === "Check Out" ? (
+                  <DatePicker
+                    value={dayjs(rowData[field])}
+                    format="DD-MM-YY"
+                  
+                    onChange={(date) => handleInputChange(date, field)}
+                  />
+                )
+
+              
+               
+                : (
                   <input
-                    type={header === 'Check Inn' || header === 'Check Out' ? 'date' : 'text'}
+                    type='text'
                     placeholder={header}
                     className="border p-2 rounded-lg"
                     value={rowData[field]}
@@ -240,11 +260,31 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                 <tr key={rowIndex}>
                   {headers.map((header, index) => {
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
-                    return (
-                      <td key={index} className="border px-4 py-2">
-                        {row[field]}
-                      </td>
-                    );
+                      console.log(field)
+                    if(field === "checkinn" || field === "checkout"){
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                          {  dayjs(row[field]).format("MM-DD-YYYY")}
+                        </td>
+                      )
+                    } 
+                    else if (field === "rate") {
+                      // Calculate the rate: nights * roomsquantity * selling
+                      const rate = row['nights'] * row['roomsquantity'] * row['selling'];
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                          {rate.toFixed(2)} {/* Display rate with 2 decimal places */}
+                        </td>
+                      );
+                    }
+                    else{
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                          {row[field]}
+                        </td>
+                      );
+
+                    }
                   })}
                   <td className="border px-4 py-2">
                     <button

@@ -1,67 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => {
   const headers = [
     'Total P/A', 'Total R/A', 'RoE', 'PKR P/A', 'PKR R/A'
   ];
 
-  const [rowData, setRowData] = useState({
-    totalpa: '',
-    totalra: '',
+  const initialRowData = {
+    totalpa: 0,
+    totalra: 0,
     roe: 74,
-    pkrpa: '',
-    pkrra: '',
-  });
+    pkrpa: 0,
+    pkrra: 0,
+  };
 
+  const [rowData, setRowData] = useState(initialRowData);
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
+  useEffect(() => {
+    // Calculate initial values when formData or rowData.roe changes
+    calculateValues();
+  }, []);
 
-  const calculation = () =>{
-    const mainDetailRa = formData.mainDetails.ra
-    const mainDetailPa = formData.mainDetails.pa
+  const calculateValues = () => {
+    const mainDetailRa = parseFloat(formData.mainDetails.ra) || 0;
+    const mainDetailPa = parseFloat(formData.mainDetails.pa) || 0;
     let totalRA = 0;
     let totalPA = 0;
-  
+
     for (const row of formData.transport) {
-      console.log(row)
-      totalRA += parseFloat(row.ra);
-      totalPA += parseFloat(row.pa);
+      totalRA += parseFloat(row.ra) || 0;
+      totalPA += parseFloat(row.pa) || 0;
     }
-    totalPA += parseFloat(mainDetailPa)
-    totalRA += parseFloat(mainDetailRa)
+    totalPA += mainDetailPa;
+    totalRA += mainDetailRa;
 
-    setRowData({...rowData,totalpa:totalPA,totalra:totalRA,pkrpa:rowData.roe * totalPA ,pkrra: rowData.roe * totalRA  })
-  }
- 
-  useEffect(()=>{
-    calculation()
-  },[])
+    const roe = parseFloat(rowData.roe) || 0;
 
+    setRowData({
+      ...rowData,
+      totalpa: totalPA,
+      totalra: totalRA,
+      pkrpa: roe * totalPA,
+      pkrra: roe * totalRA,
+    });
+  };
 
   const handleInputChange = (e, field) => {
-   
-
-   
     const value = e.target.value;
-    if (['totalpa', 'totalra', 'roe', 'pkrpa', 'pkrra'].includes(field)) {
-      if (!/^\d*$/.test(value)) {
-        alert(`${field.charAt(0).toUpperCase() + field.slice(1)} must be a number`);
-        return;
-      }
+
+    if (field === 'roe') {
+     
+      setRowData(prevRowData => ({
+        ...prevRowData,
+        roe: value,
+      
+        
+        pkrpa: parseFloat(value || 0) * prevRowData.totalpa,
+        pkrra: parseFloat(value || 0) * prevRowData.totalra,
+      }));
+    } else {
+      setRowData({ ...rowData, [field]: value });
     }
-    setRowData({ ...rowData, [field]: value });
   };
 
   const handleAddRow = () => {
-    // Check for empty fields
-    for (const key in rowData) {
-      if (rowData[key] === '') {
-        alert(`Please fill out the ${key.replace(/(?<=\b)\w/g, c => c.toUpperCase())} field`);
-        return;
-      }
-    }
-
     if (isEditing) {
       const updatedData = [...data];
       updatedData[editIndex] = rowData;
@@ -69,16 +72,10 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
       setIsEditing(false);
       setEditIndex(null);
     } else {
-      handleChange('officeInvoice', null, rowData); // Pass the new row data as value
+      handleChange('officeInvoice', null, rowData);
     }
 
-    setRowData({
-      totalpa: '',
-      totalra: '',
-      roe: '',
-      pkrpa: '',
-      pkrra: '',
-    });
+    setRowData(initialRowData);
   };
 
   const handleEditRow = (index) => {
@@ -91,6 +88,18 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
   const handleDeleteRow = (index) => {
     const updatedOfficeInvoice = data.filter((item, i) => i !== index);
     setFormData({ ...formData, officeInvoice: updatedOfficeInvoice });
+  };
+
+  const handleCalculateNow = () => {
+    const roe = parseFloat(rowData.roe) || 0;
+    const totalPA = parseFloat(rowData.totalpa) || 0;
+    const totalRA = parseFloat(rowData.totalra) || 0;
+
+    setRowData({
+      ...rowData,
+      pkrpa: roe * totalPA,
+      pkrra: roe * totalRA,
+    });
   };
 
   return (
@@ -115,10 +124,16 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
           );
         })}
       </div>
-      <div className='flex items-center justify-end'>
+      <div className='flex items-center justify-end mt-4'>
+        <button
+          onClick={handleCalculateNow}
+          className="mr-4 bg-green-500 text-white p-2 rounded-lg"
+        >
+          Calculate Now
+        </button>
         <button
           onClick={handleAddRow}
-          className="mt-4 bg-blue-500 text-white p-2 rounded-lg w-40"
+          className="bg-blue-500 text-white p-2 rounded-lg w-40"
         >
           {isEditing ? 'Save' : 'Add'}
         </button>

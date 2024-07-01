@@ -3,6 +3,8 @@ import { sectorOptions, vehicleOptions } from '@/extra/data';
 import Select from 'react-select';
 import {SharedModal} from "../../components/modal/sharedmodal"; 
 import CreatableSelect from 'react-select/creatable'
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs'; 
 export const Transport = ({ formData, data, setFormData, handleChange,transportVendorOptions,mainDetails,  fetchData}) => {
   const [showVendorModal, setShowVendorModal] = useState(false);
   const headers = [
@@ -26,7 +28,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
     guestname: mainDetails.guestName,
     vehicle: '',
     ref: '',
-    date: '',
+    date: dayjs().format('MM-DD-YY'), 
     sector: '',
     vendor: '',
     flightdetails: '',
@@ -35,6 +37,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
     remarks: '',
     pickpoint: '',
     droppoint: '',
+  
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -43,21 +46,36 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
 
   const handleInputChange = (value, field) => {
     if (field === 'r/a') {
-      field = 'ra';
+     
+      if (!isNaN(value) && parseFloat(value) >= 0) {
+        setRowData({ ...rowData, ra: parseFloat(value) });
+      } else {
+    
+        alert(`Must be a number ${field.toUpperCase()}`);
+      
+      }
     } else if (field === 'p/a') {
-      field = 'pa';
+      
+      if (!isNaN(value) && parseFloat(value) >= 0) {
+        setRowData({ ...rowData, pa: parseFloat(value) });
+      } else {
+        
+        alert(`Must be a number ${field.toUpperCase()}`);
+     
+      }
+    } else {
+      setRowData({ ...rowData, [field]: value });
     }
-    setRowData({ ...rowData, [field]: value });
   };
 
   const handleAddRow = () => {
-    // Check for empty fields
-    for (const key in rowData) {
-      if (rowData[key] === '') {
-        alert(`Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`);
-        return;
-      }
-    }
+   
+    // for (const key in rowData) {
+    //   if (rowData[key] === '') {
+    //     alert(`Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`);
+    //     return;
+    //   }
+    // }
 
     if (isEditing) {
       const updatedData = [...data];
@@ -70,9 +88,11 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
     }
 
     setRowData({
+      fileno: mainDetails.fileNo,
+      guestname: mainDetails.guestName,
       vehicle: '',
       ref: '',
-      date: '',
+      date:  dayjs().format('MM-DD-YY'),
       sector: '',
       vendor: '',
       flightdetails: '',
@@ -81,6 +101,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
       remarks: '',
       pickpoint: '',
       droppoint: '',
+    
     });
   };
 
@@ -119,7 +140,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
         <h1>Step 3: Transport</h1>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {headers.filter((header) => header !== 'File No' && header !== 'Guest Name')
+        {headers.filter((header) => header !== 'File No' && header !== 'Guest Name' )
           .map((header, index) => {
           const field = header.toLowerCase().replace(/ /g, '');
           return (
@@ -160,10 +181,22 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                   onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
                   options={sectorOptions}
                 />
-              ) : (
+              ) 
+              : header === "Date" ? (
+                 <DatePicker
+                  value={dayjs(rowData[field])}
+                  format="DD-MM-YY"
+                
+                  onChange={(date) => handleInputChange(date, field)}
+                 />
+              )
+              
+              :
+               (
                 <input
-                  type={header === 'Date' ? 'date' : 'text'}
+                 
                   placeholder={header}
+              
                   className="border p-2 rounded-lg"
                   value={rowData[field]}
                   onChange={(e) => handleInputChange(e.target.value, field)}
@@ -197,11 +230,22 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                 <tr key={rowIndex}>
                   {headers.map((header, index) => {
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
-                    return (
-                      <td key={index} className="border px-4 py-2">
-                        {row[field]}
-                      </td>
-                    );
+                    if(field === 'date') {
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                         
+                          {  dayjs(row[field]).format("MM-DD-YYYY")}
+                        </td>
+                      );
+                    }
+                    else{
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                          {row[field]}
+                        </td>
+                      );
+
+                    }
                   })}
                   <td className="border px-4 py-2">
                     <button
@@ -213,6 +257,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                     <button onClick={() => handleDeleteRow(rowIndex)} className="bg-red-500 text-white p-1 rounded">
                       Delete
                     </button>
+                  
                   </td>
                 </tr>
               ))

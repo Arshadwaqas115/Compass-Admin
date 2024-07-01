@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 export const UserForm = ({setPath,data}) => {
 
-  console.log(data)
+  
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(0);
   const [agentOptions,setAgentsOptions] = useState([])
@@ -146,12 +146,27 @@ export const UserForm = ({setPath,data}) => {
         visaRequired: formData.mainDetails.visaRequired,
         visaCount: formData.mainDetails.visaCount,
       };
-  
+      const updatedFormDataAccomodation = formData.accomodation.map(acc => {
+        return {
+          ...acc,
+          checkinn: acc.checkinn ? dayjs(acc.checkinn).format("MM-DD-YYYY") : "",
+          checkout: acc.checkout ? dayjs(acc.checkout).format("MM-DD-YYYY") : "",
+        };
+      })
+
+      
+
+      const updatedFormDataTransport = formData.transport.map(acc => {
+        return {
+          ...acc,
+          date: acc.date ? dayjs(acc.date).format("MM-DD-YYYY") : "",
+        };
+      })
       let docRef;
       if (data?.docId) {
         docRef = doc(db, "Data", data.docId);
         
-        await setDoc(docRef, { mainDetails, accomodation: formData.accomodation, transport: formData.transport, services: formData.services, officeInvoice: formData.officeInvoice }, { merge: true });
+        await setDoc(docRef, { mainDetails, accomodation: updatedFormDataAccomodation, transport: updatedFormDataTransport, services: formData.services, officeInvoice: formData.officeInvoice }, { merge: true });
        
         
      
@@ -166,8 +181,8 @@ export const UserForm = ({setPath,data}) => {
         const agentRef = doc(db, "Agents", formData.mainDetails.agentId);
         const agentDoc = await getDoc(agentRef);
         const agentData = agentDoc.data() || {};
-        const updatedAgentAccommodation = (agentData.accomodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(formData.accomodation);
-        const updatedAgentTransport = (agentData.transport || []).filter(trans => trans.fileno !== formData.mainDetails.fileNo).concat(formData.transport);
+        const updatedAgentAccommodation = (agentData.accomodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataAccomodation);
+        const updatedAgentTransport = (agentData.transport || []).filter(trans => trans.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataTransport);
         const updatedAgentData = {
           ...agentData,
           accomodation: updatedAgentAccommodation,
@@ -187,7 +202,7 @@ export const UserForm = ({setPath,data}) => {
         const vendorRef = doc(db, "Vendors", vendorId);
         const vendorDoc = await getDoc(vendorRef);
         const vendorData = vendorDoc.data() || {};
-        const updatedAccommodation = (vendorData.accommodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(formData.accomodation.filter(acc => acc.vendor === vendorOptions.find(v => v.id === vendorId).label));
+        const updatedAccommodation = (vendorData.accommodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataAccomodation.filter(acc => acc.vendor === vendorOptions.find(v => v.id === vendorId).label));
         await setDoc(vendorRef, { accommodation: updatedAccommodation }, { merge: true });
       }
   
@@ -201,7 +216,7 @@ export const UserForm = ({setPath,data}) => {
         const vendorRef = doc(db, "TransportVendors", vendorId);
         const vendorDoc = await getDoc(vendorRef);
         const vendorData = vendorDoc.data() || {};
-        const updatedTransport = (vendorData.transport || []).filter(trans => trans.fileno !== formData.mainDetails.fileNo).concat(formData.transport.filter(trans => trans.vendor === transportVendorOptions.find(v => v.id === vendorId).label));
+        const updatedTransport = (vendorData.transport || []).filter(trans => trans.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataTransport.filter(trans => trans.vendor === transportVendorOptions.find(v => v.id === vendorId).label));
         await setDoc(vendorRef, { transport: updatedTransport }, { merge: true });
       }
   
@@ -258,21 +273,27 @@ export const UserForm = ({setPath,data}) => {
     setFormData(prevData => ({
       ...prevData,
       mainDetails: {
-             ...prevData.mainDetails,
-               date: data?.mainDetails?.date ? dayjs(data?.mainDetails?.date) : null,
-               fileNo: data?.mainDetails?.fileNo,
-               agent: data?.mainDetails?.agent,
-               agentId: data?.mainDetails?.agentId,
-               guestName: data?.mainDetails?.guestName,
-               details: data?.mainDetails?.details,
-               visaCompany: data?.mainDetails?.visaCompany,
-               pa: data?.mainDetails?.pa,
-               ra: data?.mainDetails?.ra,
-               visaRequired: data?.mainDetails?.visaRequired,
-               visaCount: data?.mainDetails?.visaCount,
+        ...prevData.mainDetails,
+        date: data?.mainDetails?.date ? dayjs(data?.mainDetails?.date) : null,
+        fileNo: data?.mainDetails?.fileNo,
+        agent: data?.mainDetails?.agent,
+        agentId: data?.mainDetails?.agentId,
+        guestName: data?.mainDetails?.guestName,
+        details: data?.mainDetails?.details,
+        visaCompany: data?.mainDetails?.visaCompany,
+        pa: data?.mainDetails?.pa,
+        ra: data?.mainDetails?.ra,
+        visaRequired: data?.mainDetails?.visaRequired,
+        visaCount: data?.mainDetails?.visaCount,
       },
-      accomodation: data?.accomodation,
-      transport: data?.transport,
+      accomodation: data?.accomodation.map((item) => ({
+        ...item,
+        status: item.status ? item.status : 'booked', // Set status to 'booked' only if status is not defined
+      })),
+      transport: data?.transport.map((item) => ({
+        ...item,
+        status: item.status ? item.status : 'booked', // Set status to 'booked' only if status is not defined
+      })),
       services: data?.services,
       officeInvoice: data?.officeInvoice
     }));

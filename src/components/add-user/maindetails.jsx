@@ -3,8 +3,8 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { useState, useEffect } from "react";
 import Select from 'react-select';
 import {SharedModal} from "../../components/modal/sharedmodal"; 
-
-export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData }) => {
+import dayjs from "dayjs";
+export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData,handleSave }) => {
   const [selected, setSelected] = useState(null);
   const [showVendorModal, setShowVendorModal] = useState(false);
   const handleSelectChange = (selectedOption) => {
@@ -55,7 +55,8 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
           </div>
           <div>
             <DatePicker
-              value={data.date}
+              value={dayjs(data.date)}
+              format="DD-MM-YY"
               onChange={(date) => handleChange("mainDetails", "date", date)}
             />
           </div>
@@ -190,6 +191,11 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
             {errors?.visaCount && <p className="text-red-500">{errors.visaCount}</p>}
           </div>
         )}
+      </div>
+      <div className="flex justify-end mt-4">
+        <button onClick={()=>{handleSave()}} className="bg-blue-500 text-white p-2 rounded-lg w-40">
+          Save Main Details
+        </button>
       </div>
       {showVendorModal && <SharedModal onClose={closeVendorModal} type="agent"   fetchData={fetchData} />}
     </div>
