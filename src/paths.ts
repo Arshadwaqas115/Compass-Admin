@@ -7,7 +7,8 @@ export const paths = {
     detail : '/dashboard/add-user',
     user_agent_list: '/dashboard/users',
     tranportVendors: '/dashboard/transportVendors',
-    employes : '/dashboard/employes'
+    employes : '/dashboard/employes',
+    chart : '/dashboard/chart'
 
     // overview: '/dashboard'
   },

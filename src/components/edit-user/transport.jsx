@@ -230,7 +230,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
                       );
                     }
                   })}
-                  <td className="border px-4 py-2 flex gap-4">
+                  <td className="border px-4 py-8 flex gap-4">
                     <button
                       onClick={() => handleEditRow(rowIndex)}
                       className="mr-2 bg-yellow-500 text-white p-1 rounded"

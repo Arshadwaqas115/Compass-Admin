@@ -7,8 +7,8 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
     { title: 'Hotel Vendor', type: 'dropdown' },
     { title: 'Agent Name', type: 'dropdown' },
     { title: 'Transport Vendor', type: 'dropdown' },
-    { title: 'File Number', type: 'input' },
-    { title: 'Date Range', type: 'date' },
+    // { title: 'File Number', type: 'input' },
+    // { title: 'Date Range', type: 'date' },
     { title: 'Hotel Name', type: 'input' },
     { title: 'Staff Name', type: 'input' },
     { title: 'Ref No', type: 'input' },
@@ -246,20 +246,23 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
                       </option>
                     ))}
                 </select>
-              ) : item.type === 'date' && checkedOptions[item.title] ? (
-                <div className="flex space-x-4 justify-end">
-                  <input
-                    type="date"
-                    className="border p-1 rounded w-1/3"
-                    onChange={(e) => handleInputChange('startDate', e.target.value)}
-                  />
-                  <input
-                    type="date"
-                    className="border p-1 rounded w-1/3"
-                    onChange={(e) => handleInputChange('endDate', e.target.value)}
-                  />
-                </div>
-              ) : null}
+              ) 
+              // : item.type === 'date' && checkedOptions[item.title] ? (
+              //   <div className="flex space-x-4 justify-end">
+              //     <input
+              //       type="date"
+              //       className="border p-1 rounded w-1/3"
+              //       onChange={(e) => handleInputChange('startDate', e.target.value)}
+              //     />
+              //     <input
+              //       type="date"
+              //       className="border p-1 rounded w-1/3"
+              //       onChange={(e) => handleInputChange('endDate', e.target.value)}
+              //     />
+              //   </div>
+              // ) 
+              
+              : null}
             </div>
           ))}
         </form>

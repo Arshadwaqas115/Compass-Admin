@@ -25,7 +25,7 @@ const headers = [
   'Selling',
   'Purchase',
   'Vendor',
-  'Rate'
+ 
 ];
 
 export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData }) => {
@@ -102,7 +102,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     }
 
     setRowData({
-      fileNo: mainDetails.fileNo,
+      fileno: mainDetails.fileNo,
       guestname: mainDetails.guestName,
       city: '',
       ref: '',
@@ -111,13 +111,13 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       roomtype: '',
       meals: '',
       roomsquantity: '',
-   checkinn: dayjs().format('MM-DD-YY'),
-    checkout: dayjs().format('MM-DD-YY'),
+      checkinn: dayjs().format('MM-DD-YY'),
+      checkout: dayjs().format('MM-DD-YY'),
       nights: '',
       vendor: '',
       selling: '',
       purchase: '',
-      rate:0,
+   
     });
   };
 
@@ -268,15 +268,15 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                         </td>
                       )
                     } 
-                    else if (field === "rate") {
-                      // Calculate the rate: nights * roomsquantity * selling
-                      const rate = row['nights'] * row['roomsquantity'] * row['selling'];
-                      return (
-                        <td key={index} className="border px-4 py-2">
-                          {rate.toFixed(2)} {/* Display rate with 2 decimal places */}
-                        </td>
-                      );
-                    }
+                    // else if (field === "rate") {
+                    //   // Calculate the rate: nights * roomsquantity * selling
+                    //   const rate = row['nights'] * row['roomsquantity'] * row['selling'];
+                    //   return (
+                    //     <td key={index} className="border px-4 py-2">
+                    //       {rate.toFixed(2)} {/* Display rate with 2 decimal places */}
+                    //     </td>
+                    //   );
+                    // }
                     else{
                       return (
                         <td key={index} className="border px-4 py-2">

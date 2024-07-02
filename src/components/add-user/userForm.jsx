@@ -21,10 +21,24 @@ export const UserForm = ({setPath}) => {
   const [transportVendorOptions,setTransportVendorOptions] = useState([])
   const [formErrors, setFormErrors] = useState({});
   const [isMainDetailsSaved, setIsMainDetailsSaved] = useState(false);
-  const handleSaveMainDetails = () => {
+  const handleSaveMainDetails = async () => {
     if (validateMainDetails()) {
-      setIsMainDetailsSaved(true);
-      toast.success("Main Details Saved Successfully.");
+      try {
+        const dataCollection = collection(db, "Data");
+        const getDocsSnapshot = await getDocs(dataCollection);
+        const data = getDocsSnapshot.docs.map(doc => doc.data());
+  
+        if (data.find(d => d.mainDetails.fileNo === formData.mainDetails.fileNo)) {
+          toast.error("File No. already exists.");
+          return;
+        }
+  
+        setIsMainDetailsSaved(true);
+        toast.success("Main Details Saved Successfully.");
+      } catch (error) {
+        console.error("Error fetching documents: ", error);
+        toast.error("An error occurred while saving Main Details.");
+      }
     } else {
       toast.error("Please fill out all required fields in Main Details.");
     }
