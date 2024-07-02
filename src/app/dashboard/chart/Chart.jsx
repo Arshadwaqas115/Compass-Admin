@@ -2,12 +2,12 @@
 
 import React, {useEffect, useRef} from 'react';
 import { format, eachDayOfInterval, isWithinInterval, isValid } from 'date-fns';
-import { useScreenshot , createFileName } from 'use-react-screenshot'
+// import { useScreenshot , createFileName } from 'use-react-screenshot'
 const Chart = ({ data, fromDate, toDate }) => {
   const days = eachDayOfInterval({ start: new Date(fromDate), end: new Date(toDate) });
   const ref = useRef(null)
-  const [image, takeScreenshot] = useScreenshot()
-  const getImage = () => takeScreenshot(ref.current)
+  // const [image, takeScreenshot] = useScreenshot()
+  // const getImage = () => takeScreenshot(ref.current)
 
 
 
@@ -22,30 +22,30 @@ const Chart = ({ data, fromDate, toDate }) => {
   });
 
 
-  const download = (iImage, { name = 'img', extension = 'png' } = {}) => {
-    const a = document.createElement('a')
-    a.href = iImage
-    a.download = createFileName(extension, name)
-    a.click()
-  }
+  // const download = (iImage, { name = 'img', extension = 'png' } = {}) => {
+  //   const a = document.createElement('a')
+  //   a.href = iImage
+  //   a.download = createFileName(extension, name)
+  //   a.click()
+  // }
 
 
 
   
-  useEffect(() => {
-    if (image) {
-      const now = new Date()
-      const formattedTime = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-      download(image, { name: `${fromDate} - ${toDate} -- ${now.toDateString()} -- ${formattedTime}`, extension: 'png' })
-    }
-  }, [image])
+  // useEffect(() => {
+  //   if (image) {
+  //     const now = new Date()
+  //     const formattedTime = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+  //     download(image, { name: `${fromDate} - ${toDate} -- ${now.toDateString()} -- ${formattedTime}`, extension: 'png' })
+  //   }
+  // }, [image])
 
   return (
     <div className="mt-20">
       <div>
-        <button  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 text-sm' onClick={getImage}>
+        {/* <button  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 text-sm' onClick={getImage}>
           Take screenshot
-        </button>
+        </button> */}
       </div>
       <table className="border-collapse border-2 text-xs" ref={ref}>
         <thead>
