@@ -12,7 +12,7 @@ export const hotelOptions = ['Dar Al Tawhid','Fairmount Clock Tower',"Raffles Pa
   };
 });
 
-export const vehicleOptions = ['GMC', 'hiace', 'coaster'].map((item) => {
+export const vehicleOptions = ['GMC', 'hiace', 'coaster','Aeroplane'].map((item) => {
   return {
     value: item,
     label: item,
@@ -33,7 +33,7 @@ export const mealOptions = ['RO', 'BB', 'HB', 'FB', 'Iftar', 'Sahur'].map((item)
   };
 });
 
-export const serviceOptions = ['Full Service', 'Hotel Check', 'Payment','Seats Hold for Bus Transfers','Ziarat by Sharing Bus','Complaint Resolution'].map((item) => {
+export const serviceOptions = ['Full Service', 'Hotel Check', 'Payment','Seats Hold for Bus Transfers','Ziarat by Sharing Bus','Complaint Resolution','Visa Only','Ticket','Air Ticket'].map((item) => {
   return {
     value: item,
     label: item,

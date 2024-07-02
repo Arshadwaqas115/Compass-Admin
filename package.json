@@ -32,6 +32,7 @@
     "@mui/x-date-pickers": "6.19.6",
     "@phosphor-icons/react": "2.0.15",
     "apexcharts": "3.46.0",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.10",
     "firebase": "^10.12.2",
     "gantt-task-react": "^0.3.9",
@@ -48,6 +49,7 @@
     "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
     "toastify": "^2.0.1",
+    "use-react-screenshot": "^4.0.0",
     "zod": "3.22.4"
   },
   "devDependencies": {

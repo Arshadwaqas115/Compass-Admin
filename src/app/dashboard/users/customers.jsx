@@ -140,7 +140,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
       <div className="flex items-center justify-between ">
         <h1 className="text-xl p-4">Guests</h1>
         <div className="flex items-center space-x-2">
-          {graphView && filteredUsers.length > 0 && (
+          {/* {graphView && filteredUsers.length > 0 && (
             <h1
               onClick={() => {
                 setShowFilteredDataModal(true);
@@ -149,7 +149,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
             >
               Show Chart
             </h1>
-          )}
+          )} */}
           <svg
             width="24px"
             height="24px"
@@ -255,7 +255,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
         </div>
       </div>
       <div className="flex space-x-4 justify-end border-b pb-4 mt-4">
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <input
             type="checkbox"
             id="useDateRange"
@@ -265,8 +265,8 @@ export const Customers = ({ setPath, setDocId, setType }) => {
           <label htmlFor="useDateRange" className="ml-2">
             Use Date Range
           </label>
-        </div>
-        <div className='flex items-center gap-2'>
+        </div> */}
+        {/* <div className='flex items-center gap-2'>
           <h1>start date:</h1>
           <input
             value={startDate}
@@ -285,7 +285,7 @@ export const Customers = ({ setPath, setDocId, setType }) => {
             onChange={(e) => setEndDate(e.target.value)}
             disabled={!useDateRange}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-4">

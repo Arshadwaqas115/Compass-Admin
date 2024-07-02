@@ -36,7 +36,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
       <div className="grid grid-cols-3 p-4 pb-2 gap-4">
         <div className="flex flex-col gap-2">
           <div>
-            <h1 className="font-semibold">File no</h1>
+            <h1 className="font-semibold">File no *</h1>
           </div>
           <div>
             <input
@@ -51,7 +51,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
         </div>
         <div>
           <div>
-            <h1 className="font-semibold">Date</h1>
+            <h1 className="font-semibold">Date *</h1>
           </div>
           <div>
             <DatePicker
@@ -64,7 +64,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
         </div>
         <div className="flex flex-col gap-2">
           <div>
-            <h1 className="font-semibold">Agent</h1>
+            <h1 className="font-semibold">Agent *</h1>
           </div>
           <div className="flex items-center">
             <Select
@@ -85,7 +85,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
         </div>
         <div className="flex flex-col gap-2">
           <div>
-            <h1 className="font-semibold">Guest Name</h1>
+            <h1 className="font-semibold">Guest Name *</h1>
           </div>
           <div>
             <input

@@ -32,9 +32,20 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
       totalRA += parseFloat(row.ra) || 0;
       totalPA += parseFloat(row.pa) || 0;
     }
+   
+
+    for (const row of formData.accomodation){
+      totalRA += (parseFloat(row.purchase*row.roomsquantity*row.nights) || 0)
+      totalPA += (parseFloat(row.selling*row.roomsquantity*row.nights) || 0)
+    }
+
+    for(const row of formData.services){
+      totalRA +=(parseFloat(row.charges) || 0)
+      // totalPA += (parseFloat(row.charges) || 0)
+    }
+
     totalPA += mainDetailPa;
     totalRA += mainDetailRa;
-
     const roe = parseFloat(rowData.roe) || 0;
 
     setRowData({

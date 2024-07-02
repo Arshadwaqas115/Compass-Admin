@@ -31,7 +31,7 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
           <th className="border px-4 py-2">QTY</th>
           <th className="border px-4 py-2">Room Type</th>
           <th className="border px-4 py-2">Meals</th>
-          <th className="border px-4 py-2">Rate</th>
+          {/* <th className="border px-4 py-2">Rate</th> */}
         </tr>
       </thead>
       <tbody>
@@ -39,7 +39,7 @@ const Voucher = React.forwardRef(({ printData }, ref) => (
           <td className="border px-4 py-2">{printData.quantity}</td>
           <td className="border px-4 py-2">{printData.roomType}</td>
           <td className="border px-4 py-2">{printData.meals}</td>
-          <th className="border px-4 py-2">{printData.rate.toFixed(2)}</th>
+          {/* <th className="border px-4 py-2">{printData.rate.toFixed(2)}</th> */}
         </tr>
       </tbody>
     </table>
@@ -99,7 +99,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Vendor',
     'Selling',
     'Purchase',
-    'Rate',
+   
     'Print',
     
   ];
@@ -119,7 +119,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Vendor',
     'Selling',
     'Purchase',
-    'Rate',
+   
     'Print',
   ];
   const vendorHeaders = [
@@ -138,7 +138,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Vendor',
     'Selling',
     'Purchase',
-    'Rate',
+  
     'Print',
   ];
   const getHeaders = () => {
@@ -169,7 +169,7 @@ export const Accomodation = ({ data, customer, type }) => {
       roomType: row.roomtype,
       meals: row.meals,
       agent:row.vendor,
-      rate:row.nights*row.roomsquantity*row.selling
+      // rate:row.nights*row.roomsquantity*row.selling
     };
     setPrintData(objectForPrint);
   };
@@ -209,20 +209,13 @@ export const Accomodation = ({ data, customer, type }) => {
                 <tr key={rowIndex}>
                   {headers.slice(0, -1).map((header, index) => {
                     const field = header.toLowerCase().replace(/ /g, '');
-                    if(field ==='rate'){
-                      const rate = row['nights'] * row['roomsquantity'] * row['selling'];
-                      return(
-                        <td key={index} className="border px-4 py-2">
-                        {rate.toFixed(2)} {/* Display rate with 2 decimal places */}
-                      </td>
-                      )
-                    }else{
+                   
                       return (
                         <td key={index} className="border px-4 py-2">
                           {row[field]}
                         </td>
                       );
-                    }
+                    
                     
                   })}
                   <td className="border px-4 py-2">

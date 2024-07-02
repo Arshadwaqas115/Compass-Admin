@@ -189,7 +189,7 @@ export const UserForm = ({setPath,data}) => {
           transport: updatedAgentTransport,
           mainDetails,
         };
-        console.log("updated",updatedAgentData)
+        
         await setDoc(agentRef, updatedAgentData, { merge: true });
   
       // Update accommodation vendors
@@ -288,11 +288,11 @@ export const UserForm = ({setPath,data}) => {
       },
       accomodation: data?.accomodation.map((item) => ({
         ...item,
-        status: item.status ? item.status : 'booked', // Set status to 'booked' only if status is not defined
+        status: item.status ? item.status : 'booked', 
       })),
       transport: data?.transport.map((item) => ({
         ...item,
-        status: item.status ? item.status : 'booked', // Set status to 'booked' only if status is not defined
+        status: item.status ? item.status : 'booked', 
       })),
       services: data?.services,
       officeInvoice: data?.officeInvoice
