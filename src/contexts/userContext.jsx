@@ -12,7 +12,7 @@ export const AppContextProvider = ({ children }) => {
     
    
       const storedUser = localStorage.getItem('user');
-      console.log(storedUser)
+ 
       if (storedUser) {
         setUser(JSON.parse(storedUser));
         router.replace(paths.dashboard.agents);

@@ -7,39 +7,39 @@ const Chart = ({ data, fromDate, toDate }) => {
   const days = eachDayOfInterval({ start: new Date(fromDate), end: new Date(toDate) });
   const ref = useRef(null)
   const [image, takeScreenshot] = useScreenshot()
-  const getImage = () => takeScreenshot(ref.current)
+  const getImage = async () => {
+    const screenshot = await takeScreenshot(ref.current);
+    const now = new Date();
+    const formattedTime = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+    download(screenshot, { name: `${fromDate} - ${toDate} -- ${now.toDateString()} -- ${formattedTime}`, extension: 'png' });
+  };
+
+  const download = (iImage, { name = 'img', extension = 'png' } = {}) => {
+    const a = document.createElement('a');
+    a.href = iImage;
+    a.download = createFileName(extension, name);
+    a.click();
+  };
 
 
 
   const filteredData = data?.filter((item) => {
-    const lastAccommodationCheckout = item.accomodation.length > 0 ? new Date(item.accomodation[item.accomodation.length - 1]?.checkout) : null;
-    const lastTransportDate = item.transport.length > 0 ? new Date(item.transport[item.transport.length - 1]?.date) : null;
-
-    const isAccommodationWithinRange = lastAccommodationCheckout && isValid(lastAccommodationCheckout) && isWithinInterval(lastAccommodationCheckout, { start: new Date(fromDate), end: new Date(toDate) });
-    const isTransportWithinRange = lastTransportDate && isValid(lastTransportDate) && isWithinInterval(lastTransportDate, { start: new Date(fromDate), end: new Date(toDate) });
-
-    return isAccommodationWithinRange || isTransportWithinRange;
-  });
-
-
-  const download = (iImage, { name = 'img', extension = 'png' } = {}) => {
-    const a = document.createElement('a')
-    a.href = iImage
-    a.download = createFileName(extension, name)
-    a.click()
-  }
-
-
-
+    const hasAccommodationWithinRange = item.accomodation.some(acc => {
+      const checkinDate = new Date(acc.checkinn);
+      const checkoutDate = new Date(acc.checkout);
+      return isValid(checkinDate) && isValid(checkoutDate) && 
+             ((checkinDate >= new Date(fromDate) && checkinDate <= new Date(toDate)) || 
+              (checkoutDate >= new Date(fromDate) && checkoutDate <= new Date(toDate)) ||
+              (checkinDate < new Date(fromDate) && checkoutDate > new Date(toDate)));
+    });
   
-  useEffect(() => {
-    if (image) {
-      const now = new Date()
-      const formattedTime = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-      download(image, { name: `${fromDate} - ${toDate} -- ${now.toDateString()} -- ${formattedTime}`, extension: 'png' })
-    }
-  }, [image])
-
+    const hasTransportWithinRange = item.transport.some(tran => {
+      const transportDate = new Date(tran.date);
+      return isValid(transportDate) && transportDate >= new Date(fromDate) && transportDate <= new Date(toDate);
+    });
+  
+    return hasAccommodationWithinRange || hasTransportWithinRange;
+  });
   return (
     <div className="mt-20">
       <div>
@@ -65,14 +65,14 @@ const Chart = ({ data, fromDate, toDate }) => {
               <td className="border px-4 py-2 text-black font-bold">{item.mainDetails?.guestName}</td>
               <td className="border px-4 py-2 text-black font-bold">{item.services[0]?.service}</td>
               {days.map((day, dayIndex) => {
-                const currentHotel = item.accomodation.find(acc => {
-                  const checkinDate = new Date(acc.checkinn);
-                  const checkoutDate = new Date(acc.checkout);
-                  return isValid(checkinDate) && isValid(checkoutDate) && isWithinInterval(day, {
-                    start: checkinDate,
-                    end: checkoutDate
-                  });
+               const currentHotel = item.accomodation.find(acc => {
+                const checkinDate = new Date(acc.checkinn);
+                const checkoutDate = new Date(acc.checkout);
+                return isValid(checkinDate) && isValid(checkoutDate) && isWithinInterval(day, {
+                  start: checkinDate,
+                  end: checkoutDate
                 });
+              });
 
                 const transportItem = item?.transport.find(t => {
                   const transportDate = new Date(t.date);
