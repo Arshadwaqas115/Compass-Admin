@@ -1,12 +1,12 @@
 import { AppContext } from '@/contexts/userContext';
 import { db } from '@/firebase/firebase';
 import { Avatar } from '@mui/material';
-import { doc, deleteDoc ,collection, query, where, getDocs} from "firebase/firestore";
+import { doc, deleteDoc ,collection, query, where, getDocs,setDoc} from "firebase/firestore";
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
 
 export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) => {
-
+ 
 
   const {user} = useContext(AppContext)
 
@@ -74,6 +74,41 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
           } else {
             toast.error("User not found");
           }
+
+          const vendorsRef = collection(db, "Vendors");
+          const vendorsSnapshot = await getDocs(vendorsRef);
+
+
+
+          if (!vendorsSnapshot.empty) {
+            vendorsSnapshot.forEach(async (vendorDoc) => {
+              const newVendorDocs = vendorDoc.data().accomodation.filter(doc => doc.fileno !== item.fileNo);
+              await setDoc(vendorDoc.ref, {accomodation: newVendorDocs}, {merge: true});
+            });
+          }
+
+          const transportVendorsRef = collection(db, "TransportVendors");
+          const transportVendorsSnapshot = await getDocs(transportVendorsRef);
+
+          if (!transportVendorsSnapshot.empty) {
+            transportVendorsSnapshot.forEach(async (transportVendorDoc) => {
+              const newTransportVendorDocs = transportVendorDoc.data().transport.filter(doc => doc.fileno !== item.fileNo);
+              await setDoc(transportVendorDoc.ref, {transport: newTransportVendorDocs}, {merge: true});
+            });
+          }
+          
+          const agentsRef = collection(db, "Agents");
+          const agentsSnapshot = await getDocs(agentsRef);
+
+          if (!agentsSnapshot.empty) {
+            agentsSnapshot.forEach(async (agentDoc) => {
+              const newAccomodationDocs = agentDoc.data().accomodation.filter(doc => doc.fileno !== item.fileNo);
+              const newTransportDocs = agentDoc.data().transport.filter(doc => doc.fileno !== item.fileNo);
+
+              await setDoc(agentDoc.ref, { accomodation: newAccomodationDocs, transport: newTransportDocs }, { merge: true });
+            });
+          }
+
           getUsersData()
         
         }

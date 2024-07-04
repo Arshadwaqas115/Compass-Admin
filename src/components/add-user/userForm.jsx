@@ -67,7 +67,7 @@ export const UserForm = ({setPath}) => {
   const [formData, setFormData] = useState({
     mainDetails: {
       fileNo: "",
-      date: dayjs().format('MM-DD-YY'),
+      date: dayjs().format('DD-MM-YY'),
       agent:"",
       agentId: "",
       guestName: "",
@@ -154,7 +154,7 @@ export const UserForm = ({setPath}) => {
    
       const mainDetails = {
         fileNo: formData.mainDetails.fileNo,
-        date: formData.mainDetails.date ? dayjs(formData.mainDetails.date).format("MM-DD-YYYY") : "",
+        date: formData.mainDetails.date ? dayjs(formData.mainDetails.date).format("DD-MM-YY") : "",
         agent: agentName.value,
         guestName: formData.mainDetails.guestName,
         details: formData.mainDetails.details,
@@ -168,17 +168,17 @@ export const UserForm = ({setPath}) => {
       const updatedFormDataAccomodation = formData.accomodation.map(acc => {
         return {
           ...acc,
-          checkinn: acc.checkinn ? dayjs(acc.checkinn).format("MM-DD-YYYY") : "",
-          checkout: acc.checkout ? dayjs(acc.checkout).format("MM-DD-YYYY") : "",
+          checkinn: acc.checkinn ? acc.checkinn : "",
+          checkout: acc.checkout ? acc.checkout : "",
         };
       })
 
       
 
-      const updatedFormDataTransport = formData.transport.map(acc => {
+      const updatedFormDataTransport = formData.transport.map(item => {
         return {
-          ...acc,
-          date: acc.date ? dayjs(acc.date).format("MM-DD-YYYY") : "",
+          ...item,
+          date: item.date ?item.date : "",
         };
       })
    
@@ -216,7 +216,7 @@ export const UserForm = ({setPath}) => {
         const vendorDoc = await getDoc(vendorRef);
         const vendorData = vendorDoc.data() || {};
         const updatedAccommodation = [...(vendorData.accommodation || []), ...updatedFormDataAccomodation.filter(acc => acc.vendor === vendorOptions.find(v => v.id === vendorId).label)];
-        await setDoc(vendorRef, { accommodation: updatedAccommodation }, { merge: true });
+        await setDoc(vendorRef, { accomodation: updatedAccommodation }, { merge: true });
       }
   
       const transportVendors = formData.transport.map(trans => {
@@ -308,6 +308,7 @@ export const UserForm = ({setPath}) => {
       data={formData.accomodation} 
       handleChange={handleChange}
       fetchData={fetchData}
+      setVendorOptions={setVendorOptions}
       /> 
     },
 

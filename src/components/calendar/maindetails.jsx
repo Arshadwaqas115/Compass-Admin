@@ -1,4 +1,7 @@
 "use client";
+
+import dayjs from "dayjs";
+
 // import { DatePicker } from "@mui/x-date-pickers";
 
 
@@ -25,7 +28,7 @@ export const Maindetails = ({ data}) => {
             <h1 className="font-semibold">Date</h1>
           </div>
           <div>
-            {data?.date}
+            {dayjs(data?.date,"DD-MM-YY").format("DD-MM-YY")}
           </div>
         </div>
         <div className="flex flex-col gap-2">

@@ -55,7 +55,7 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
           </div>
           <div>
             <DatePicker
-              value={dayjs(data.date)}
+              value={dayjs(data.date,"DD-MM-YY")}
               format="DD-MM-YY"
               onChange={(date) => handleChange("mainDetails", "date", date)}
             />

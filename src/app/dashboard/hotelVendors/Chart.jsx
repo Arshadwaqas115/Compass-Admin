@@ -24,7 +24,7 @@ const Chart = ({ setPath, docId, type }) => {
 
       if (docSnap.exists()) {
         const temp = docSnap.data();
-        console.log("Document data:", temp);
+       
         setData(temp);
       } else {
         console.log("No such document!");
@@ -48,7 +48,7 @@ const Chart = ({ setPath, docId, type }) => {
  
   const steps = [
     { name: 'Main details', component: <Maindetails data={data?.mainDetails} /> },
-    { name: 'Accomodation', component: <Accomodation data={data?.accommodation} customer={data?.mainDetails} type={type} /> },
+    { name: 'Accomodation', component: <Accomodation data={data?.accomodation} customer={data?.mainDetails} type={type} /> },
     { name: 'Transport', component: <Transport data={data?.transport} customer={data?.mainDetails} type={type} /> },
     { name: 'Services', component: <Services data={data?.services} /> },
     { name: 'Office Invoice', component: <OfficeInvoice data={data?.officeInvoice} /> },

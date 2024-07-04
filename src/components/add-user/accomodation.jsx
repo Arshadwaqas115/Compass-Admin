@@ -28,7 +28,7 @@ const headers = [
  
 ];
 
-export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData }) => {
+export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData, setVendorOptions }) => {
   const [rowData, setRowData] = useState({
     fileno: mainDetails.fileNo,
     guestname: mainDetails.guestName,
@@ -39,17 +39,25 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     roomtype: '',
     meals: '',
     roomsquantity: '',
-    checkinn: dayjs().format('MM-DD-YY'),
-    checkout: dayjs().format('MM-DD-YY'),
+    checkinn: dayjs().format('DD-MM-YY'),
+    checkout: dayjs().format('DD-MM-YY'),
     nights: '',
     vendor: '',
     selling: '',
     purchase: '',
   });
 
+  console.log(rowData, "formData")
+  
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [showVendorModal, setShowVendorModal] = useState(false);
+  const [roomValue, setRoomValue] = useState(null);
+  const [hotelValue, setHotelValue] = useState(null);
+  const [mealValue, setMealValue] = useState(null);
+  const [vendorValue,setVendorValue] = useState(null);
+
+  
   useEffect(() => {
     if (rowData.checkinn && rowData.checkout) {
       const nights = calculateNights(rowData.checkinn, rowData.checkout);
@@ -68,11 +76,10 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   };
 
   const calculateNights = (checkinn, checkout) => {
-    const checkInDate = new Date(checkinn);
-    const checkOutDate = new Date(checkout);
-    const timeDiff = checkOutDate - checkInDate;
-    const daysDiff = timeDiff / (1000 * 3600 * 24);
-    return daysDiff > 0 ? daysDiff : 0;
+    const checkInDate = dayjs(checkinn, 'DD-MM-YY');
+    const checkOutDate = dayjs(checkout, 'DD-MM-YY');
+    const timeDiff = checkOutDate.diff(checkInDate, 'days');
+    return timeDiff > 0 ? timeDiff : 0;
   };
 
   const handleAddRow = () => {
@@ -93,8 +100,9 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     if (isEditing) {
       const updatedData = [...data];
       updatedData[editIndex] = newRowData;
+     
       setFormData({ ...formData, accomodation: updatedData });
-
+      
       setIsEditing(false);
       setEditIndex(null);
     } else {
@@ -119,10 +127,20 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       purchase: '',
    
     });
+    setRoomValue(null);
+    setHotelValue(null);
+    setMealValue(null);
+    setVendorValue(null)
+
+    
   };
 
   const handleEditRow = (index) => {
     setRowData(data[index]);
+    setRoomValue(data[index].roomtype ? {value: data[index].roomtype, label: data[index].roomtype} : null); 
+    setHotelValue(data[index].hotelname ? {value: data[index].hotelname, label: data[index].hotelname} : null);
+    setMealValue(data[index].meals ? {value: data[index].meals, label: data[index].meals} : null);
+    setVendorValue(data[index].vendor ? {value: data[index].vendor, label: data[index].vendor} : null);
     setIsEditing(true);
     setEditIndex(index);
   };
@@ -130,6 +148,10 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   const handleDeleteRow = (index) => {
     const updatedAccommodation = data.filter((item, i) => i !== index);
     setFormData({ ...formData, accomodation: updatedAccommodation });
+    setRoomValue(null);
+    setHotelValue(null);
+    setMealValue(null);
+    setVendorValue(null)
   };
 
   const openVendorModal = () => {
@@ -158,16 +180,24 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                   <CreatableSelect
                     placeholder={header}
                     className="p-2 rounded-lg"
-                    value={roomOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    value={roomValue}
+                  
+                    onChange={(selectedOption) => {
+                      setRoomValue(selectedOption);
+                      handleInputChange(selectedOption.value, field)
+                    }}
                     options={roomOptions}
                   />
                 ) : header === 'Hotel Name' ? (
                   <CreatableSelect
                     placeholder={header}
                     className="p-2 rounded-lg"
-                    value={hotelOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    value={hotelValue}
+                  
+                    onChange={(selectedOption) => {
+                      setHotelValue(selectedOption);
+                      handleInputChange(selectedOption.value, field)
+                    }}
                     options={hotelOptions}
                   
                   />
@@ -176,10 +206,10 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                                   <Select
                                     placeholder={header}
                                     className="p-2 rounded-lg flex-1"
-                                    value={vendorOptions.find((option) => option.value === rowData[field])}
+                                    value={vendorValue}
                                     onChange={(selectedOption) => {
                                       handleInputChange(selectedOption.value, field);
-                                     
+                                      setVendorValue(selectedOption);
                                     }}
                                     options={vendorOptions}
                                   />
@@ -196,8 +226,12 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                   <CreatableSelect
                     placeholder={header}
                     className="p-2 rounded-lg"
-                    value={mealOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    value={mealValue}
+                  
+                    onChange={(selectedOption) => {
+                      setMealValue(selectedOption);
+                      handleInputChange(selectedOption.value, field);
+                    }}
                     options={mealOptions}
                   />
                 ) : header === 'Nights' ? (
@@ -214,10 +248,9 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                 
                 header === "Check Inn" || header === "Check Out" ? (
                   <DatePicker
-                    value={dayjs(rowData[field])}
+                    value={dayjs(rowData[field],"DD-MM-YY")}
                     format="DD-MM-YY"
-                  
-                    onChange={(date) => handleInputChange(date, field)}
+                    onChange={(date) => handleInputChange(date ? dayjs(date).format('DD-MM-YY') : '', field)}
                   />
                 )
 
@@ -260,11 +293,11 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                 <tr key={rowIndex}>
                   {headers.map((header, index) => {
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
-                      console.log(field)
+                    
                     if(field === "checkinn" || field === "checkout"){
                       return (
                         <td key={index} className="border px-4 py-2">
-                          {  dayjs(row[field]).format("MM-DD-YYYY")}
+                          {  dayjs(row[field]).format("DD-MM-YY")}
                         </td>
                       )
                     } 

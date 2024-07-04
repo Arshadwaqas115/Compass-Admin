@@ -31,7 +31,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
     guestname: mainDetails.guestName,
     vehicle: '',
     ref: '',
-    date: dayjs().format('MM-DD-YY'),
+    date: dayjs().format('DD-MM-YY'),
     sector: '',
     vendor: '',
     flightdetails: '',
@@ -46,6 +46,9 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
+  const [vehicleValue,setVehicleValue] = useState(null);
+  const [sectorValue,setSectorValue] = useState(null);
+  const [vendorValue,setVendorValue] = useState(null);
   const handleInputChange = (value, field) => {
     if (field === 'r/a') {
       if (!isNaN(value) && parseFloat(value) >= 0) {
@@ -80,7 +83,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
       guestname: mainDetails.guestName,
       vehicle: '',
       ref: '',
-      date: dayjs().format('MM-DD-YY'),
+      date: dayjs().format('DD-MM-YY'),
       sector: '',
       vendor: '',
       flightdetails: '',
@@ -91,6 +94,9 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
       droppoint: '',
       status: 'booked'
     });
+    setSectorValue(null)
+    setVehicleValue(null)
+    setVendorValue(null)
   };
 
   const handleEditRow = (index) => {
@@ -103,7 +109,9 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
       transformedData.pa = transformedData['P/A'];
       delete transformedData['P/A'];
     }
-
+    setSectorValue(data[index].sector ? {value: data[index].sector, label: data[index].sector} : null);
+    setVehicleValue(data[index].vehicle ? {value: data[index].vehicle, label: data[index].vehicle} : null);
+    setVendorValue(data[index].vendor ? {value: data[index].vendor, label: data[index].vendor} : null);
     setRowData(transformedData);
     setIsEditing(true);
     setEditIndex(index);
@@ -112,6 +120,9 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
   const handleDeleteRow = (index) => {
     const updatedTransport = data.filter((item, i) => i !== index);
     setFormData({ ...formData, transport: updatedTransport });
+    setSectorValue(null)
+    setVehicleValue(null)
+    setVendorValue(null)
   };
 
   const openVendorModal = () => {
@@ -143,13 +154,18 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
                 {header === 'Vendor' ? (
                   <div className="flex items-center">
                     <div className='flex-grow'>
-                      <Select
-                        placeholder={header}
-                        className="p-2 rounded-lg"
-                        value={transportVendorOptions.find((option) => option.value === rowData[field])}
-                        onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                        options={transportVendorOptions}
-                      />
+                     
+                        <Select
+                          placeholder={header}
+                          className="p-2 rounded-lg"
+                          value={vendorValue}
+                          
+                          onChange={(selectedOption) =>{
+                            setVendorValue(selectedOption);
+                            handleInputChange(selectedOption.value, field)
+                          }}
+                          options={transportVendorOptions}
+                        />
                     </div>
                     <button
                       onClick={openVendorModal}
@@ -160,25 +176,33 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
                   </div>
                 ) : header === 'Vehicle' ? (
                   <CreatableSelect
-                    placeholder={header}
-                    className="p-2 rounded-lg"
-                    value={vehicleOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                    options={vehicleOptions}
-                  />
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={vehicleValue}
+                
+                  onChange={(selectedOption)=>{
+                    setVehicleValue(selectedOption);
+                    handleInputChange(selectedOption.value, field)
+                  }}
+                  options={vehicleOptions}
+                />
                 ) : header === 'Sector' ? (
                   <CreatableSelect
-                    placeholder={header}
-                    className="p-2 rounded-lg"
-                    value={sectorOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
-                    options={sectorOptions}
-                  />
+                  placeholder={header}
+                  className="p-2 rounded-lg"
+                  value={sectorValue}
+                  onChange={(selectedOption) => {
+                    handleInputChange(selectedOption.value, field)
+                    setSectorValue(selectedOption);
+                  }}
+                  options={sectorOptions}
+                />
                 ) : header === "Date" ? (
                   <DatePicker
-                    value={dayjs(rowData[field])}
-                    format="DD-MM-YY"
-                    onChange={(date) => handleInputChange(date, field)}
+                  value={dayjs(rowData[field], "DD-MM-YY")}
+                  format="DD-MM-YY"
+                
+                  onChange={(date) => handleInputChange(dayjs(date).format("DD-MM-YY"), field)}
                   />
                 ) : (
                   <input
@@ -219,7 +243,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
                     if (field === 'date') {
                       return (
                         <td key={index} className="border px-4 py-2">
-                          {dayjs(row[field]).format("MM-DD-YYYY")}
+                          {dayjs(row[field],"DD-MM-YY").format("DD-MM-YY")}
                         </td>
                       );
                     } else {
