@@ -16,7 +16,7 @@ const Chart = ({ setPath, docId, type }) => {
   const [data, setData] = useState({});
   const [step, setStep] = useState(0);
 
-  console.log(data);
+ 
   const getData = async () => {
     setLoading(true);
   

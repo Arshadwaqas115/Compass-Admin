@@ -107,7 +107,7 @@ export const UserForm = ({setPath,data}) => {
 
   const validateMainDetails = () => {
     const errors = {};
-    const requiredFields = ["fileNo", "date", "agentId", "guestName", "visaCompany"];
+    const requiredFields = ["fileNo", "date", "agentId", "guestName"];
 
     requiredFields.forEach(field => {
       if (!formData.mainDetails[field]) {
@@ -136,7 +136,7 @@ export const UserForm = ({setPath,data}) => {
   
       const mainDetails = {
         fileNo: formData.mainDetails.fileNo,
-        date: formData.mainDetails.date ? dayjs(formData.mainDetails.date).format("MM-DD-YYYY") : "",
+        date: formData.mainDetails.date ? dayjs(formData.mainDetails.date).format("DD-MM-YY"): "",
         agent: agentName.value,
         guestName: formData.mainDetails.guestName,
         details: formData.mainDetails.details,
@@ -149,8 +149,8 @@ export const UserForm = ({setPath,data}) => {
       const updatedFormDataAccomodation = formData.accomodation.map(acc => {
         return {
           ...acc,
-          checkinn: acc.checkinn ? dayjs(acc.checkinn).format("MM-DD-YYYY") : "",
-          checkout: acc.checkout ? dayjs(acc.checkout).format("MM-DD-YYYY") : "",
+          checkinn: acc.checkinn ?     acc.checkinn : "",
+          checkout: acc.checkout ?   acc.checkout: "",
         };
       })
 
@@ -159,9 +159,10 @@ export const UserForm = ({setPath,data}) => {
       const updatedFormDataTransport = formData.transport.map(acc => {
         return {
           ...acc,
-          date: acc.date ? dayjs(acc.date).format("MM-DD-YYYY") : "",
+          date: acc.date ? acc.date : "",
         };
       })
+      
       let docRef;
       if (data?.docId) {
         docRef = doc(db, "Data", data.docId);
@@ -203,7 +204,7 @@ export const UserForm = ({setPath,data}) => {
         const vendorDoc = await getDoc(vendorRef);
         const vendorData = vendorDoc.data() || {};
         const updatedAccommodation = (vendorData.accommodation || []).filter(acc => acc.fileno !== formData.mainDetails.fileNo).concat(updatedFormDataAccomodation.filter(acc => acc.vendor === vendorOptions.find(v => v.id === vendorId).label));
-        await setDoc(vendorRef, { accommodation: updatedAccommodation }, { merge: true });
+        await setDoc(vendorRef, { accomodation: updatedAccommodation }, { merge: true });
       }
   
       // Update transport vendors
@@ -274,7 +275,7 @@ export const UserForm = ({setPath,data}) => {
       ...prevData,
       mainDetails: {
         ...prevData.mainDetails,
-        date: data?.mainDetails?.date ? dayjs(data?.mainDetails?.date) : null,
+        date: data?.mainDetails?.date ? dayjs(data?.mainDetails?.date,"DD-MM-YY") : null,
         fileNo: data?.mainDetails?.fileNo,
         agent: data?.mainDetails?.agent,
         agentId: data?.mainDetails?.agentId,
@@ -302,6 +303,7 @@ export const UserForm = ({setPath,data}) => {
      
   }, []);
 
+  
 
   const steps = [
     { name: 'Main details', 

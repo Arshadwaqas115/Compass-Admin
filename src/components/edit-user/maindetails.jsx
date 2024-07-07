@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Select from 'react-select';
 import {SharedModal} from "../../components/modal/sharedmodal"; 
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData }) => {
   const agent = agentOptions.find((agent) => agent.name === data?.mainDetails?.agent);
@@ -60,8 +61,9 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
           </div>
           <div>
             <DatePicker
-              value={data.date}
+              value={dayjs(data.date,"DD-MM-YY")}
               onChange={(date) => handleChange("mainDetails", "date", date)}
+              format="DD-MM-YY"
             />
           </div>
           {errors?.date && <p className="text-red-500">{errors.date}</p>}

@@ -7,6 +7,10 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs'; 
 export const Transport = ({ formData, data, setFormData, handleChange,transportVendorOptions,mainDetails,  fetchData}) => {
   const [showVendorModal, setShowVendorModal] = useState(false);
+  const [vehicleValue,setVehicleValue] = useState(null);
+  const [sectorValue,setSectorValue] = useState(null);
+  const [vendorValue,setVendorValue] = useState(null);
+  
   const headers = [
     'File No',
     'Guest Name',
@@ -25,18 +29,18 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
 
   const [rowData, setRowData] = useState({
         fileno: mainDetails.fileNo,
-    guestname: mainDetails.guestName,
-    vehicle: '',
-    ref: '',
-    date: dayjs().format('MM-DD-YY'), 
-    sector: '',
-    vendor: '',
-    flightdetails: '',
-    ra: '',
-    pa: '',
-    remarks: '',
-    pickpoint: '',
-    droppoint: '',
+        guestname: mainDetails.guestName,
+        vehicle: '',
+        ref: '',
+        date: dayjs().format('DD-MM-YY'), 
+        sector: '',
+        vendor: '',
+        flightdetails: '',
+        ra: '',
+        pa: '',
+        remarks: '',
+        pickpoint: '',
+        droppoint: '',
   
   });
 
@@ -51,7 +55,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
         setRowData({ ...rowData, ra: parseFloat(value) });
       } else {
     
-        alert(`Must be a number ${field.toUpperCase()}`);
+        
       
       }
     } else if (field === 'p/a') {
@@ -60,7 +64,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
         setRowData({ ...rowData, pa: parseFloat(value) });
       } else {
         
-        alert(`Must be a number ${field.toUpperCase()}`);
+       
      
       }
     } else {
@@ -72,7 +76,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
    
     // for (const key in rowData) {
     //   if (rowData[key] === '') {
-    //     alert(`Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field`);
+    //     alert(Please fill out the ${key.charAt(0).toUpperCase() + key.slice(1)} field);
     //     return;
     //   }
     // }
@@ -92,7 +96,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
       guestname: mainDetails.guestName,
       vehicle: '',
       ref: '',
-      date:  dayjs().format('MM-DD-YY'),
+      date:  dayjs().format('DD-MM-YY'),
       sector: '',
       vendor: '',
       flightdetails: '',
@@ -103,6 +107,9 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
       droppoint: '',
     
     });
+    setSectorValue(null)
+    setVehicleValue(null)
+    setVendorValue(null)
   };
 
   const handleEditRow = (index) => {
@@ -116,6 +123,9 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
       delete transformedData['P/A'];
     }
 
+    setSectorValue(data[index].sector ? {value: data[index].sector, label: data[index].sector} : null);
+    setVehicleValue(data[index].vehicle ? {value: data[index].vehicle, label: data[index].vehicle} : null);
+    setVendorValue(data[index].vendor ? {value: data[index].vendor, label: data[index].vendor} : null);
     setRowData(transformedData);
     setIsEditing(true);
     setEditIndex(index);
@@ -124,6 +134,9 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
   const handleDeleteRow = (index) => {
     const updatedTransport = data.filter((item, i) => i !== index);
     setFormData({ ...formData, transport: updatedTransport });
+    setSectorValue(null)
+    setVehicleValue(null)
+    setVendorValue(null)
   };
   const openVendorModal = () => {
     setShowVendorModal(true);
@@ -153,8 +166,12 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                   <Select
                     placeholder={header}
                     className="p-2 rounded-lg"
-                    value={transportVendorOptions.find((option) => option.value === rowData[field])}
-                    onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                    value={vendorValue}
+                    
+                    onChange={(selectedOption) =>{
+                      setVendorValue(selectedOption);
+                      handleInputChange(selectedOption.value, field)
+                    }}
                     options={transportVendorOptions}
                   />
                   </div>
@@ -169,25 +186,31 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                 <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
-                  value={vehicleOptions.find((option) => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  value={vehicleValue}
+                
+                  onChange={(selectedOption)=>{
+                    setVehicleValue(selectedOption);
+                    handleInputChange(selectedOption.value, field)
+                  }}
                   options={vehicleOptions}
                 />
               ) : header === 'Sector' ? (
                 <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
-                  value={sectorOptions.find((option) => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  value={sectorValue}
+                  onChange={(selectedOption) => {
+                    handleInputChange(selectedOption.value, field)
+                    setSectorValue(selectedOption);
+                  }}
                   options={sectorOptions}
                 />
               ) 
               : header === "Date" ? (
                  <DatePicker
-                  value={dayjs(rowData[field])}
-                  format="DD-MM-YY"
-                
-                  onChange={(date) => handleInputChange(date, field)}
+                 value={dayjs(rowData[field],"DD-MM-YY")}
+                 format="DD-MM-YY"
+                 onChange={(date) => handleInputChange(date ? dayjs(date).format('DD-MM-YY') : '', field)}
                  />
               )
               
@@ -234,7 +257,7 @@ export const Transport = ({ formData, data, setFormData, handleChange,transportV
                       return (
                         <td key={index} className="border px-4 py-2">
                          
-                          {  dayjs(row[field]).format("MM-DD-YYYY")}
+                         {  dayjs(row[field]).format("DD-MM-YY")}
                         </td>
                       );
                     }

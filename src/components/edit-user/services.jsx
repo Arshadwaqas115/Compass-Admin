@@ -14,6 +14,8 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
+  const [serviceValue, setServiceValue] = useState(null);
+  const [staffValue,setStaffValue] = useState(null);
   const handleInputChange = (value, field) => {
     setRowData({ ...rowData, [field]: value });
   };
@@ -41,10 +43,14 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
       charges: '',
       staff: '',
     });
+    setStaffValue(null)
+    setServiceValue(null)
   };
 
   const handleEditRow = (index) => {
     const rowDataToEdit = data[index];
+    setServiceValue(data[index].service? {label: data[index].service, value: data[index].service}: null);
+    setStaffValue(data[index].staff? {label: data[index].staff, value: data[index].staff}: null);
     setRowData(rowDataToEdit);
     setIsEditing(true);
     setEditIndex(index);
@@ -53,6 +59,8 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
   const handleDeleteRow = (index) => {
     const updatedServices = data.filter((item, i) => i !== index);
     setFormData({ ...formData, services: updatedServices });
+    setStaffValue(null)
+    setServiceValue(null)
   };
 
   return (
@@ -64,22 +72,22 @@ export const Services = ({ formData, setFormData, data, handleChange }) => {
         {headers.map((header, index) => {
           const field = header.toLowerCase();
           return (
-            <div key={index} className="flex flex-col gap-2">
+            <div key={index} className="flex flex-col gap-2 justify-center">
               <label className="font-semibold">{header}</label>
               {header === 'Service' ? (
                 <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
-                  value={serviceOptions.find((option) => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  value={serviceValue}
+                  onChange={(selectedOption) => {handleInputChange(selectedOption.value, field); setServiceValue(selectedOption)} }
                   options={serviceOptions}
                 />
               ) : header === 'Staff' ? (
                 <CreatableSelect
                   placeholder={header}
                   className="p-2 rounded-lg"
-                  value={staffOptions.find((option) => option.value === rowData[field])}
-                  onChange={(selectedOption) => handleInputChange(selectedOption.value, field)}
+                  value={staffValue}
+                  onChange={(selectedOption) => {handleInputChange(selectedOption.value, field); setStaffValue(selectedOption)} }
                   options={staffOptions}
                 />
               ) : (

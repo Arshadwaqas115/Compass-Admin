@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import React, { useRef, useState, forwardRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
@@ -143,11 +144,21 @@ export const Transport = ({ data, customer ,type }) => {
                 <tr key={rowIndex}>
                   {headers.slice(0, -1).map((header, index) => {
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
-                    return (
-                      <td key={index} className="border px-4 py-2">
-                        {row[field]}
-                      </td>
-                    );
+                    if(field === 'date') {
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                         
+                         {  dayjs(row[field],"DD-MM-YY").format("DD-MM-YY")}
+                        </td>
+                      );
+                    }else{
+                      return (
+                        <td key={index} className="border px-4 py-2">
+                          {row[field]}
+                        </td>
+                      );
+
+                    }
                   })}
                   <td className="border px-4 py-2">
                     <button
