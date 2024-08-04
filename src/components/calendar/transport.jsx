@@ -132,7 +132,7 @@ export const Transport = ({ data, customer ,type }) => {
           <thead>
             <tr>
               {headers.map((header, index) => (
-                <th key={index} className="border px-4 py-2 bg-gray-200">
+                <th key={index} className="border px-4 py-2 bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis">
                   {header}
                 </th>
               ))}
@@ -146,21 +146,21 @@ export const Transport = ({ data, customer ,type }) => {
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
                     if(field === 'date') {
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                          
                          {  dayjs(row[field],"DD-MM-YY").format("DD-MM-YY")}
                         </td>
                       );
                     }else{
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                           {row[field]}
                         </td>
                       );
 
                     }
                   })}
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                     <button
                       onClick={() => handlePrint(row)}
                       className="bg-blue-500 text-white px-2 py-1 rounded"
@@ -172,7 +172,7 @@ export const Transport = ({ data, customer ,type }) => {
               ))
             ) : (
               <tr>
-                <td colSpan={headers.length} className="border px-4 py-2 text-center">
+                <td colSpan={headers.length} className="border px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">
                   No data available
                 </td>
               </tr>

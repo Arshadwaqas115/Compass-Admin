@@ -124,13 +124,13 @@ const NewModal = ({ show, onClose, filteredData,setGraphView }) => {
               break;
             }
           } else if (option === 'Hotel Name') {
-            const hasHotel = doc.data().accomodation?.some((accomodation) => accomodation.hotelname === selectedOptions[option]);
+            const hasHotel = doc.data().accomodation?.some((accomodation) => accomodation.hotelname.toLowerCase().includes(selectedOptions[option].toLowerCase()));
             if (!hasHotel) {
               match = false;
               break;
             }
           } else if (option === 'Staff Name') {
-            const hasStaff = doc.data().services?.some((services) => services.staff === selectedOptions[option]);
+            const hasStaff = doc.data().services?.some((services) => services.staff.toLowerCase().includes(selectedOptions[option].toLowerCase()));
             if (!hasStaff) {
               match = false;
               break;

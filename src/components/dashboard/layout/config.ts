@@ -7,7 +7,9 @@ export const navItems = [
   { key: 'agents', title: 'Agents', href: paths.dashboard.agents, icon: 'users' },
   { key: 'vendors', title: 'Hotel Vendors', href:paths.dashboard.vendors,  icon:'users'} ,
   { key: 'tranportVendors', title: 'Transport Vendors', href:paths.dashboard.tranportVendors, icon:'users'},
-  { key: 'employes',title:"Employees",href:paths.dashboard.employes,icon:'users'},
+  { key: 'hotels', title: 'Hotels', href:paths.dashboard.hotels,  icon:'users'} ,
+  { key: 'vehicles', title: 'Vehicles', href:paths.dashboard.vehicles,  icon:'users'} ,
+  { key: 'employes',title:"Employees",href:paths.dashboard.employes,icon:'users'}
 
   //  {key: 'add-user', title:'Add User',  href: paths.dashboard.detail , icon: 'users'},
   // { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'chart-pie' },

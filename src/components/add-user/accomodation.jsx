@@ -25,10 +25,11 @@ const headers = [
   'Selling',
   'Purchase',
   'Vendor',
+  'Remarks'
  
 ];
 
-export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData, setVendorOptions }) => {
+export const Accomodation = ({ formData, data, setFormData, handleChange, vendorOptions, mainDetails,fetchData, setVendorOptions, hotelNameOptions, setHotelNameOptions }) => {
   const [rowData, setRowData] = useState({
     fileno: mainDetails.fileNo,
     guestname: mainDetails.guestName,
@@ -45,6 +46,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     vendor: '',
     selling: '',
     purchase: '',
+    remarks: ''
   });
 
   console.log(rowData, "formData")
@@ -52,6 +54,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [showVendorModal, setShowVendorModal] = useState(false);
+  const [showHotelModal, setShowHotelModal] = useState(false);
   const [roomValue, setRoomValue] = useState(null);
   const [hotelValue, setHotelValue] = useState(null);
   const [mealValue, setMealValue] = useState(null);
@@ -91,7 +94,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
     // }
 
     if (rowData.nights <= 0) {
-      alert('Check Out date must be later than Check Inn date');
+      alert('Check Out date must be later than Check In date');
       return;
     }
 
@@ -109,28 +112,28 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
       handleChange('accomodation', null, newRowData);
     }
 
-    setRowData({
-      fileno: mainDetails.fileNo,
-      guestname: mainDetails.guestName,
-      city: '',
-      ref: '',
-      hotelname: '',
-      hcn: '',
-      roomtype: '',
-      meals: '',
-      roomsquantity: '',
-      checkinn: dayjs().format('MM-DD-YY'),
-      checkout: dayjs().format('MM-DD-YY'),
-      nights: '',
-      vendor: '',
-      selling: '',
-      purchase: '',
+    // setRowData({
+    //   fileno: mainDetails.fileNo,
+    //   guestname: mainDetails.guestName,
+    //   city: '',
+    //   ref: '',
+    //   hotelname: '',
+    //   hcn: '',
+    //   roomtype: '',
+    //   meals: '',
+    //   roomsquantity: '',
+    //   checkinn: dayjs().format('MM-DD-YY'),
+    //   checkout: dayjs().format('MM-DD-YY'),
+    //   nights: '',
+    //   vendor: '',
+    //   selling: '',
+    //   purchase: '',
    
-    });
-    setRoomValue(null);
-    setHotelValue(null);
-    setMealValue(null);
-    setVendorValue(null)
+    // });
+    // setRoomValue(null);
+    // setHotelValue(null);
+    // setMealValue(null);
+    // setVendorValue(null)
 
     
   };
@@ -161,6 +164,14 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
   const closeVendorModal = () => {
     setShowVendorModal(false);
   };
+
+  const openHotelModal = () => {
+    setShowHotelModal(true);
+  };
+
+  const closeHotelModal = () => {
+    setShowHotelModal(false);
+  };
   
 
   return (
@@ -189,18 +200,27 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     options={roomOptions}
                   />
                 ) : header === 'Hotel Name' ? (
-                  <CreatableSelect
-                    placeholder={header}
-                    className="p-2 rounded-lg"
-                    value={hotelValue}
+                  <div className="flex items-center">
+                                  <Select
+                                    placeholder={header}
+                                    className="p-2 rounded-lg flex-1"
+                                    value={hotelValue}
+                                    onChange={(selectedOption) => {
+                                      handleInputChange(selectedOption.value, field);
+                                      setHotelValue(selectedOption);
+                                    }}
+                                    options={hotelNameOptions}
+                                  />
+                              
+                                    <button
+                                      onClick={openHotelModal}
+                                      className="ml-2 bg-green-500 text-white p-2 rounded-full"
+                                    >
+                                      +
+                                    </button>
+                          
+                                </div>
                   
-                    onChange={(selectedOption) => {
-                      setHotelValue(selectedOption);
-                      handleInputChange(selectedOption.value, field)
-                    }}
-                    options={hotelOptions}
-                  
-                  />
                 ) : header === 'Vendor' ? (
                               <div className="flex items-center">
                                   <Select
@@ -245,7 +265,6 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                 ) 
                 :
                 
-                
                 header === "Check Inn" || header === "Check Out" ? (
                   <DatePicker
                     value={dayjs(rowData[field],"DD-MM-YY")}
@@ -280,11 +299,11 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
           <thead>
             <tr>
               {headers.map((header, index) => (
-                <th key={index} className="border px-4 py-2 bg-gray-200">
+                <th key={index} className="border px-4 py-2 bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis">
                   {header}
                 </th>
               ))}
-              <th className="border px-4 py-2 bg-gray-200">Actions</th>
+              <th className="border px-4 py-2 bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -296,8 +315,8 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     
                     if(field === "checkinn" || field === "checkout"){
                       return (
-                        <td key={index} className="border px-4 py-2">
-                          {  dayjs(row[field]).format("DD-MM-YY")}
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                          {  dayjs(row[field],"DD-MM-YY").format("DD-MM-YY")}
                         </td>
                       )
                     } 
@@ -312,14 +331,14 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
                     // }
                     else{
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                           {row[field]}
                         </td>
                       );
 
                     }
                   })}
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                     <button
                       onClick={() => handleEditRow(rowIndex)}
                       className="mr-2 bg-yellow-500 text-white p-1 rounded"
@@ -334,7 +353,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
               ))
             ) : (
               <tr>
-                <td colSpan={headers.length + 1} className="border px-4 py-2 text-center">
+                <td colSpan={headers.length + 1} className="border px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">
                   No data available
                 </td>
               </tr>
@@ -343,6 +362,7 @@ export const Accomodation = ({ formData, data, setFormData, handleChange, vendor
         </table>
       </div>
       {showVendorModal && <SharedModal fetchData={fetchData} onClose={closeVendorModal} type="hotel"  />}
+      {showHotelModal && <SharedModal fetchData={fetchData} onClose={closeHotelModal} type="hotelName"  />}
     </div>
   );
 };

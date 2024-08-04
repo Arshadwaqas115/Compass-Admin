@@ -33,6 +33,16 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
       setPath('chart');
       setType(type);
     }
+    // else if(type === "Hotel"){
+    //   setDocId(item?.id);
+    //   setPath('chart');
+    //   setType(type);
+    // }
+    // else if(type === "Transport"){
+    //   setDocId(item?.id);
+    //   setPath('chart');
+    //   setType(type);
+    // }
   };
   
 
@@ -45,6 +55,16 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
         if(type === "Agent"){
           await deleteDoc(doc(db,"Agents",item.id))
           toast.success("Agent Deleted Successfully")
+          getUsersData()
+        }
+        else if(type === "Hotel"){
+          await deleteDoc(doc(db,"Hotels",item.id))
+          toast.success("Hotel Deleted Successfully")
+          getUsersData()
+        }
+        else if(type === "Transport"){
+          await deleteDoc(doc(db,"Transport",item.id))
+          toast.success("Vehicle Deleted Successfully")
           getUsersData()
         }
         else if(type === "TransportVendor"){
@@ -151,9 +171,14 @@ export const Card = ({ item, setPath, setDocId, type, setType,getUsersData }) =>
       </div>
       <div className='gap-4 flex'>
         
-        <button  onClick={handleClick} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
+        {
+          (type !== 'Hotel' && type !== 'Transport') &&
+          <button  onClick={handleClick} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
           View
-        </button>
+         </button>
+
+        }
+        
         {user?.role !== "Employee" && type === "User" && (
           <button  onClick={handleEdit} className='py-2 px-4 border border-black text-sm font-semibold hover:border-red-700 rounded-full'>
             Edit

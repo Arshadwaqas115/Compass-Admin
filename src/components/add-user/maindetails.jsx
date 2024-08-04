@@ -115,51 +115,6 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
         </div>
         <div className="flex flex-col gap-2">
           <div>
-            <h1 className="font-semibold">Visa Company</h1>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="visa company"
-              className="border p-2 rounded-lg py-3"
-              value={data.visaCompany}
-              onChange={(e) => handleChange("mainDetails", "visaCompany", e.target.value)}
-            />
-          </div>
-          {errors?.visaCompany && <p className="text-red-500">{errors.visaCompany}</p>}
-        </div>
-        <div className="flex flex-col gap-2">
-          <div>
-            <h1 className="font-semibold">P/A</h1>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="p/a"
-              className="border p-2 rounded-lg py-3"
-              value={data.pa}
-              onChange={(e) => handleChange("mainDetails", "pa", e.target.value)}
-            />
-          </div>
-          {errors?.pa && <p className="text-red-500">{errors.pa}</p>}
-        </div>
-        <div className="flex flex-col gap-2">
-          <div>
-            <h1 className="font-semibold">R/A</h1>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="r/a"
-              className="border p-2 rounded-lg py-3"
-              value={data.ra}
-              onChange={(e) => handleChange("mainDetails", "ra", e.target.value)}
-            />
-          </div>
-          {errors?.ra && <p className="text-red-500">{errors.ra}</p>}
-        </div>
-        <div className="flex flex-col gap-2">
-          <div>
             <h1 className="font-semibold">Visa Required</h1>
           </div>
           <div>
@@ -174,6 +129,57 @@ export const Maindetails = ({ data, handleChange, agentOptions, errors,fetchData
             </select>
           </div>
         </div>
+        {
+          data.visaRequired === 'yes' && (
+            <>
+            <div className="flex flex-col gap-2">
+              <div>
+                <h1 className="font-semibold">Visa Company</h1>
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="visa company"
+                  className="border p-2 rounded-lg py-3"
+                  value={data.visaCompany}
+                  onChange={(e) => handleChange("mainDetails", "visaCompany", e.target.value)}
+                />
+              </div>
+              {errors?.visaCompany && <p className="text-red-500">{errors.visaCompany}</p>}
+            </div>
+            <div className="flex flex-col gap-2">
+              <div>
+                <h1 className="font-semibold">P/A</h1>
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="p/a"
+                  className="border p-2 rounded-lg py-3"
+                  value={data.pa}
+                  onChange={(e) => handleChange("mainDetails", "pa", e.target.value)}
+                />
+              </div>
+              {errors?.pa && <p className="text-red-500">{errors.pa}</p>}
+            </div>
+            <div className="flex flex-col gap-2">
+              <div>
+                <h1 className="font-semibold">R/A</h1>
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="r/a"
+                  className="border p-2 rounded-lg py-3"
+                  value={data.ra}
+                  onChange={(e) => handleChange("mainDetails", "ra", e.target.value)}
+                />
+              </div>
+              {errors?.ra && <p className="text-red-500">{errors.ra}</p>}
+            </div>
+            </>
+          )
+        }
         {data.visaRequired === "yes" && (
           <div className="flex flex-col gap-2">
             <div>

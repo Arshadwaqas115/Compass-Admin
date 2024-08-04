@@ -57,30 +57,6 @@ export const Maindetails = ({ data}) => {
         </div>
         <div className="flex flex-col gap-2">
           <div>
-          <h1 className="font-semibold">Visa Company</h1>
-          </div>
-          <div>
-            {data?.visaCompany}
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div>
-          <h1 className="font-semibold">P/A</h1>
-          </div>
-          <div>
-            {data?.pa}
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div>
-          <h1 className="font-semibold">R/A</h1>
-          </div>
-          <div>
-            {data?.ra}
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div>
           <h1 className="font-semibold">Visa Required</h1>
           </div>
           <div>
@@ -88,6 +64,31 @@ export const Maindetails = ({ data}) => {
           </div>
         </div>
             {data?.visaRequired === "yes" && (
+              <>
+                <div className="flex flex-col gap-2">
+                  <div>
+                  <h1 className="font-semibold">Visa Company</h1>
+                  </div>
+                  <div>
+                    {data?.visaCompany}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div>
+                  <h1 className="font-semibold">P/A</h1>
+                  </div>
+                  <div>
+                    {data?.pa}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div>
+                  <h1 className="font-semibold">R/A</h1>
+                  </div>
+                  <div>
+                    {data?.ra}
+                  </div>
+                </div>
                 <div className="flex flex-col gap-2">
                     <div>
                     <h1 className="font-semibold">Visa Count</h1>
@@ -96,6 +97,7 @@ export const Maindetails = ({ data}) => {
                       {data?.visaCount}
                     </div>
                 </div>
+              </>
             )}
         
        

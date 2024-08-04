@@ -23,8 +23,12 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
   }, []);
 
   const calculateValues = () => {
-    const mainDetailRa = parseFloat(formData.mainDetails.ra) || 0;
-    const mainDetailPa = parseFloat(formData.mainDetails.pa) || 0;
+    let visaCount = parseInt(formData.mainDetails.visaCount);
+    if (isNaN(visaCount)) {
+      visaCount = 0;
+    }
+    const mainDetailRa = parseFloat(formData.mainDetails.ra * visaCount) || 0;
+    const mainDetailPa = parseFloat(formData.mainDetails.pa * visaCount) || 0;
     let totalRA = 0;
     let totalPA = 0;
 
@@ -32,9 +36,20 @@ export const OfficeInvoice = ({ formData, setFormData, data, handleChange }) => 
       totalRA += parseFloat(row.ra) || 0;
       totalPA += parseFloat(row.pa) || 0;
     }
+   
+
+    for (const row of formData.accomodation){
+      totalPA += (parseFloat(row.purchase*row.roomsquantity*row.nights) || 0)
+      totalRA += (parseFloat(row.selling*row.roomsquantity*row.nights) || 0)
+    }
+
+    for(const row of formData.services){
+      totalRA +=(parseFloat(row.charges) || 0)
+      // totalPA += (parseFloat(row.charges) || 0)
+    }
+
     totalPA += mainDetailPa;
     totalRA += mainDetailRa;
-
     const roe = parseFloat(rowData.roe) || 0;
 
     setRowData({

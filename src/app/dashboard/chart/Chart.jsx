@@ -57,8 +57,11 @@ const Chart = ({ data, fromDate, toDate }) => {
       <table className="border-collapse border-2 text-xs" ref={ref}>
         <thead>
           <tr className='bg-orange-400'>
-            <th className="border px-4 py-2">Guest Name</th>
-            <th className="border px-4 py-2">Service</th>
+            <th className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">Sr#</th>
+            <th className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">File No.</th>
+            <th className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">Agent Name</th>
+            <th className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">Guest Name</th>
+            <th className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">Service</th>
             {days.map((day, index) => (
               <th key={index} className="border px-4 py-2">
                 {format(day, 'dd')} {format(day, 'MMM')}
@@ -69,16 +72,19 @@ const Chart = ({ data, fromDate, toDate }) => {
         <tbody className="text-xs">
           {filteredData?.map((item, index) => (
             <tr key={index}>
-              <td className="border px-4 py-2 text-black font-bold">{item.mainDetails?.guestName}</td>
-              <td className="border px-4 py-2 text-black font-bold">{item.services[0]?.service}</td>
+              <td className="border px-4 py-2 text-black font-bold whitespace-nowrap overflow-hidden text-ellipsis">{index + 1}</td>
+              <td className="border px-4 py-2 text-black font-bold whitespace-nowrap overflow-hidden text-ellipsis">{item.mainDetails?.fileNo}</td>
+              <td className="border px-4 py-2 text-black font-bold whitespace-nowrap overflow-hidden text-ellipsis">{item.mainDetails?.agent}</td>
+              <td className="border px-4 py-2 text-black font-bold whitespace-nowrap overflow-hidden text-ellipsis">{item.mainDetails?.guestName}</td>
+              <td className="border px-4 py-2 text-black font-bold whitespace-nowrap overflow-hidden text-ellipsis">{item.services[0]?.service}</td>
               {days.map((day, dayIndex) => {
                 const currentHotel = item.accomodation.find(acc => {
                   const checkinDate = dayjs(acc.checkinn, 'DD-MM-YY').toDate();
-                  const checkoutDate = dayjs(acc.checkout, 'DD-MM-YY').toDate();
-                  return dayjs(checkinDate).isValid() && dayjs(checkoutDate).isValid() && 
+                  const dayBeforeCheckoutDate = dayjs(acc.checkout, 'DD-MM-YY').subtract(1, 'day').toDate();
+                  return dayjs(checkinDate).isValid() && dayjs(dayBeforeCheckoutDate).isValid() && 
                          isWithinInterval(day, {
                            start: checkinDate,
-                           end: new Date(checkoutDate.setHours(23, 59, 59, 999)) // Extend to the end of the checkout day
+                           end: new Date(dayBeforeCheckoutDate.setHours(23, 59, 59, 999)) // Extend to the end of the checkout day
                          });
                 });
 
@@ -92,9 +98,9 @@ const Chart = ({ data, fromDate, toDate }) => {
                                            format(dayjs(transportItem.date, 'DD-MM-YY').toDate(), 'MM-dd-yyyy') === format(day, 'MM-dd-yyyy');
 
                 return (
-                  <td key={dayIndex} className="border py-2">
+                  <td key={dayIndex} className="border py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                     {currentHotel && (
-                      <div className={`p-1 truncate ${currentHotel?.status === 'Cancelled' ? 'bg-red-500 text-white' : 'bg-green-500 text-black'}`}>
+                      <div className={`p-1 truncate ${currentHotel?.status === 'Cancelled' ? 'bg-red-500 text-white' : `bg-${currentHotel.city.toUpperCase() === 'MADINAH' ? 'green' : 'yellow'}-500 text-black`}`}>
                         <div className="w-full p-1 truncate font-bold" style={{ width: "100%" }}>
                           {currentHotel?.hotelname} / {currentHotel?.vendor}
                           {currentHotel?.status === "Cancelled" && <span className="text-white"> (Cancelled)</span>}

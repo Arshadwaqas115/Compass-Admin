@@ -8,7 +8,9 @@ export const paths = {
     user_agent_list: '/dashboard/users',
     tranportVendors: '/dashboard/transportVendors',
     employes : '/dashboard/employes',
-    chart : '/dashboard/chart'
+    chart : '/dashboard/chart',
+    hotels: '/dashboard/hotels',
+    vehicles: '/dashboard/vehicles'
 
     // overview: '/dashboard'
   },

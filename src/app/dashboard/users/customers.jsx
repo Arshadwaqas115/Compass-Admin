@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 
 import { Loading } from '@/components/custom/loading';
 
@@ -78,16 +78,24 @@ export const Customers = ({ setPath, setDocId, setType }) => {
         datatemp.push({ id: doc.id, ...doc.data() });
       });
 
-
       const userQuerySnapshot = await getDocs(collection(db, 'Users'));
-      let usersTemp = [];
+    let usersTemp = [];
 
-      userQuerySnapshot.forEach((doc) => {
-       
-        usersTemp.push({ id: doc.id, ...doc.data()});
-     
-      });
-  
+    // Iterate over the documents
+    userQuerySnapshot.forEach((doc) => {
+      const data = doc.data();
+      let fileNoAsNumber = Number(data.fileNo);
+
+      // Safety check: if the conversion to number fails, set fileNoAsNumber to Infinity
+      if (isNaN(fileNoAsNumber)) {
+        fileNoAsNumber = Infinity;
+      }
+
+      usersTemp.push({ id: doc.id, fileNo: fileNoAsNumber, ...data });
+    });
+
+    // Sort the users array by the numeric fileNo
+    usersTemp.sort((a, b) => a.fileNo - b.fileNo);
 
       setData(datatemp);
       setUsers(usersTemp);

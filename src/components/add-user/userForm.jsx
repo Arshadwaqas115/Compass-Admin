@@ -18,6 +18,8 @@ export const UserForm = ({setPath}) => {
   const [step, setStep] = useState(0);
   const [agentOptions,setAgentsOptions] = useState([])
   const [vendorOptions,setVendorOptions] = useState([])
+  const [hotelNameOptions,setHotelNameOptions] = useState([])
+  const [transportNameOptions,setTransportNameOptions] = useState([])
   const [transportVendorOptions,setTransportVendorOptions] = useState([])
   const [formErrors, setFormErrors] = useState({});
   const [isMainDetailsSaved, setIsMainDetailsSaved] = useState(false);
@@ -255,6 +257,22 @@ export const UserForm = ({setPath}) => {
       }));
       setAgentsOptions(agentsList);
 
+      const transportSnapshot = await getDocs(collection(db, "Transport"));
+      const transportslist = transportSnapshot.docs.map(doc => ({
+        id: doc.id,
+        value : doc?.data()?.name,
+        label :doc?.data()?.name
+      }));
+      setTransportNameOptions(transportslist);
+
+      const hotelSnapshot = await getDocs(collection(db, "Hotels"));
+      const hotelsList = hotelSnapshot.docs.map(doc => ({
+        id: doc.id,
+        value : doc?.data()?.name,
+        label :doc?.data()?.name
+      }));
+      setHotelNameOptions(hotelsList);
+
       const vendorSnapshot = await getDocs(collection(db, "Vendors"));
       const vendorslist = vendorSnapshot.docs.map(doc => ({
         id: doc.id,
@@ -303,12 +321,15 @@ export const UserForm = ({setPath}) => {
       component: <Accomodation 
       mainDetails={formData.mainDetails}
       vendorOptions={vendorOptions} 
+      hotelNameOptions={hotelNameOptions}
       formData={formData} 
       setFormData={setFormData} 
       data={formData.accomodation} 
       handleChange={handleChange}
       fetchData={fetchData}
       setVendorOptions={setVendorOptions}
+      setHotelNameOptions={setHotelNameOptions}
+
       /> 
     },
 
@@ -318,6 +339,7 @@ export const UserForm = ({setPath}) => {
       formData={formData} 
       mainDetails={formData.mainDetails}
       transportVendorOptions={transportVendorOptions}
+      transportNameOptions={transportNameOptions}
       setFormData={setFormData} 
       data={formData.transport} 
       handleChange={handleChange} 

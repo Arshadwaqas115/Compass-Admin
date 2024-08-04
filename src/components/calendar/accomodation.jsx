@@ -83,7 +83,6 @@ Voucher.displayName = 'Voucher';
 
 export const Accomodation = ({ data, customer, type }) => {
 
-  
   const customerHeaders = [
     'File No',
     'Guest Name',
@@ -98,6 +97,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Check Out',
     'Nights',
     'Vendor',
+    'Remarks',
     'Selling',
     'Purchase',
    
@@ -118,6 +118,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Check Out',
     'Nights',
     'Vendor',
+    'Remarks',
     'Selling',
     'Purchase',
    
@@ -137,6 +138,7 @@ export const Accomodation = ({ data, customer, type }) => {
     'Check Out',
     'Nights',
     'Vendor',
+    'Remarks',
     'Selling',
     'Purchase',
   
@@ -166,6 +168,7 @@ export const Accomodation = ({ data, customer, type }) => {
       hotelName: row.hotelname,
       guestName: row.guestname,
       nights: row.nights,
+      remarks: row.remarks,
       quantity: row.roomsquantity,
       roomType: row.roomtype,
       meals: row.meals,
@@ -198,7 +201,7 @@ export const Accomodation = ({ data, customer, type }) => {
           <thead>
             <tr>
               {headers.map((header, index) => (
-                <th key={index} className="border px-4 py-2 bg-gray-200">
+                <th key={index} className="border px-4 py-2 bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis">
                   {header}
                 </th>
               ))}
@@ -212,13 +215,13 @@ export const Accomodation = ({ data, customer, type }) => {
                     const field = header.toLowerCase().replace(/ /g, '');
                     if(field === "checkinn" || field === "checkout"){
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                               {  dayjs(row[field],"DD-MM-YY").format("DD-MM-YY")}
                         </td>
                       )
                     } else{
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                           {row[field]}
                         </td>
                       );
@@ -228,7 +231,7 @@ export const Accomodation = ({ data, customer, type }) => {
                     
                     
                   })}
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                     <button onClick={() => handlePrint(row)} className="bg-blue-500 text-white px-2 py-1 rounded">
                       Print
                     </button>
@@ -237,7 +240,7 @@ export const Accomodation = ({ data, customer, type }) => {
               ))
             ) : (
               <tr>
-                <td colSpan={headers.length} className="border px-4 py-2 text-center">
+                <td colSpan={headers.length} className="border px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">
                   No data available
                 </td>
               </tr>

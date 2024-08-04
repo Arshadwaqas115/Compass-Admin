@@ -60,6 +60,38 @@ export const SharedModal = ({type,onClose,fetchData}) =>{
                     
                 }
             }
+
+            else if(type === "hotelName"){
+                if (name.trim() === "") {
+                    alert("Please fill the detail");
+                    return;
+                }
+
+                try {
+                    await addDoc(collection(db, "Hotels"), { name: name });
+                    toast.success("Hotel added successfully")
+                    setName("")
+                    fetchData()
+                } catch (error) {
+                    
+                }
+            }
+
+            else if(type === "transportName"){
+                if (name.trim() === "") {
+                    alert("Please fill the detail");
+                    return;
+                }
+
+                try {
+                    await addDoc(collection(db, "Transport"), { name: name });
+                    toast.success("Transport added successfully")
+                    setName("")
+                    fetchData()
+                } catch (error) {
+                    
+                }
+            }
     }
     
     return(
@@ -71,9 +103,17 @@ export const SharedModal = ({type,onClose,fetchData}) =>{
                                 <div>
                                     {type === "agent" ? (
                                           <h1 className="font-bold text-xl">Agent Name</h1>
-                                        ):(
+                                        ):
+                                        type === "hotelName" ? (
+                                            <h1 className="font-bold text-xl">Hotel Name</h1>
+                                        ):
+                                        type === "transportName" ? (
+                                            <h1 className="font-bold text-xl">Vehicle Name</h1>
+                                        ):
+                                        (
                                             <h1 className="font-bold text-xl">Vendor Name</h1>
-                                        )}
+                                        )
+                                    }
                                     
                                 </div>
                                 <div>
@@ -85,7 +125,26 @@ export const SharedModal = ({type,onClose,fetchData}) =>{
                                            value={name}
                                            onChange={(e) => { setName(e.target.value) }}
                                        />
-                                        ):(
+                                        ):
+                                        type === "hotelName" ? (
+                                            <input
+                                            type="text"
+                                            placeholder="Enter hotel name"
+                                            className="border p-2 rounded-lg py-3 text-center"
+                                            value={name}
+                                            onChange={(e) => { setName(e.target.value) }}
+                                        />
+                                        ):
+                                        type === "transportName" ? (
+                                            <input
+                                            type="text"
+                                            placeholder="Enter vehicle name"
+                                            className="border p-2 rounded-lg py-3 text-center"
+                                            value={name}
+                                            onChange={(e) => { setName(e.target.value) }}
+                                        />
+                                        ):
+                                        (
                                             <input
                                             type="text"
                                             placeholder="Enter vendor name"

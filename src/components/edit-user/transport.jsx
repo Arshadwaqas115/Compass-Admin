@@ -6,7 +6,7 @@ import CreatableSelect from 'react-select/creatable';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
-export const Transport = ({ formData, data, setFormData, handleChange, transportVendorOptions, mainDetails, fetchData }) => {
+export const Transport = ({ formData, data, setFormData, handleChange, transportVendorOptions, mainDetails, fetchData, transportNameOptions }) => {
   const [showVendorModal, setShowVendorModal] = useState(false);
 
   const headers = [
@@ -45,7 +45,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
+  const [showTransportModal, setShowTransportModal] = useState(false);
   const [vehicleValue,setVehicleValue] = useState(null);
   const [sectorValue,setSectorValue] = useState(null);
   const [vendorValue,setVendorValue] = useState(null);
@@ -133,6 +133,14 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
     setShowVendorModal(false);
   };
 
+  const openTransportModal = () => {
+    setShowTransportModal(true);
+  };
+
+  const closeTransportModal = () => {
+    setShowTransportModal(false);
+  };
+
   const handleBookingStatus = (index) => {
     const updatedData = [...data];
     updatedData[index].status = updatedData[index].status === 'booked' ? 'Cancelled' : 'booked';
@@ -175,17 +183,27 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
                     </button>
                   </div>
                 ) : header === 'Vehicle' ? (
-                  <CreatableSelect
-                  placeholder={header}
-                  className="p-2 rounded-lg"
-                  value={vehicleValue}
-                
-                  onChange={(selectedOption)=>{
-                    setVehicleValue(selectedOption);
-                    handleInputChange(selectedOption.value, field)
-                  }}
-                  options={vehicleOptions}
-                />
+                  <div className="flex items-center">
+                                  <Select
+                                    placeholder={header}
+                                    className="p-2 rounded-lg flex-1"
+                                    value={vehicleValue}
+                                    onChange={(selectedOption) => {
+                                      handleInputChange(selectedOption.value, field);
+                                      setVehicleValue(selectedOption);
+                                    }}
+                                    options={transportNameOptions}
+                                  />
+                              
+                                    <button
+                                      onClick={openTransportModal}
+                                      className="ml-2 bg-green-500 text-white p-2 rounded-full"
+                                    >
+                                      +
+                                    </button>
+                          
+                                </div>
+                  
                 ) : header === 'Sector' ? (
                   <CreatableSelect
                   placeholder={header}
@@ -227,11 +245,11 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
           <thead>
             <tr>
               {headers.map((header, index) => (
-                <th key={index} className="border px-4 py-2 bg-gray-200">
+                <th key={index} className="border px-4 py-2 bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis">
                   {header}
                 </th>
               ))}
-              <th className="border px-4 py-2 bg-gray-200">Actions</th>
+              <th className="border px-4 py-2 bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -242,19 +260,19 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
                     const field = header.toLowerCase().replace(/[^a-zA-Z]/g, '');
                     if (field === 'date') {
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                           {dayjs(row[field],"DD-MM-YY").format("DD-MM-YY")}
                         </td>
                       );
                     } else {
                       return (
-                        <td key={index} className="border px-4 py-2">
+                        <td key={index} className="border px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                           {row[field]}
                         </td>
                       );
                     }
                   })}
-                  <td className="border px-4 py-8 flex gap-4">
+                  <td className="border px-4 py-8 flex gap-4 whitespace-nowrap overflow-hidden text-ellipsis">
                     <button
                       onClick={() => handleEditRow(rowIndex)}
                       className="mr-2 bg-yellow-500 text-white p-1 rounded"
@@ -272,7 +290,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
               ))
             ) : (
               <tr>
-                <td colSpan={headers.length + 1} className="border px-4 py-2 text-center">
+                <td colSpan={headers.length + 1} className="border px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">
                   No data available
                 </td>
               </tr>
@@ -281,6 +299,7 @@ export const Transport = ({ formData, data, setFormData, handleChange, transport
         </table>
       </div>
       {showVendorModal && <SharedModal onClose={closeVendorModal} type="transport" fetchData={fetchData} />}
+      {showTransportModal && <SharedModal fetchData={fetchData} onClose={closeTransportModal} type="transportName"  />}
     </div>
   );
 };
